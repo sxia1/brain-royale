@@ -1,28 +1,14 @@
 //import logo from './logo.svg';
 //import './App.css';
 
-import { Container, Row, Col } from 'react-bootstrap';
+import Landing from './components/Landing';
+import Game from './components/Game';
 
 
 function App() {
   return (
     <div className="App">
-
-    <Container>
-      <Row>
-        <Col>
-            Welcome
-        </Col>
-
-        <Col>
-            Welcome
-        </Col>
-
-        <Col>
-            Welcome
-        </Col>
-      </Row>
-    </Container>
+      <Game/>
     </div>
   );
 }
