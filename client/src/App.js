@@ -3,13 +3,21 @@
 
 import Landing from './components/Landing';
 import Game from './components/Game';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 
+/*
+
+      <Landing />
+      <Box sx={{ height: 50}}/>
+
+*/
 
 function App() {
   return (
-    <div className="App">
-      <Game/>
-    </div>
+    <Container sx={{ mt: 4 }}>
+      <Game />
+    </Container>
   );
 }
 

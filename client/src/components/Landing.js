@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 function Landing() {
 
     return (
-        <Container> 
+        <Container sx={{ width: '100%', justifyContent: 'center', alignContent: 'center' }}> 
             <Button variant="contained">Tutorial</Button>
             <Button variant="contained">Join Game</Button>
             <Button variant="contained">Private Party</Button>
