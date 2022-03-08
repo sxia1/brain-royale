@@ -15,30 +15,27 @@ import Player from './Player';
 
 
 function Game(props) {
-
     return (
-        <Container sx={{ width: '100%' }}>
-            <Grid container sx={{ justifyContent: 'center', alignContent: 'flex-start' }}>
-                <Box sx={{ width: 1/4 }}>
-                    <Box sx={{ height: 90 }} />
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                        {Array.from(new Array(45)).map((item, index) => (<Player />))}
-                    </Box>
+        <Grid container sx={{ justifyContent: 'space-between', alignContent: 'flex-start', width: '100%' }}>
+            <Box sx={{ width: 1/4 }}>
+                <Box sx={{ height: 90 }} />
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                    {Array.from(new Array(45)).map((item, index) => (<Player />))}
                 </Box>
+            </Box>
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center',  width: 1/2}}>
-                    <Puzzle />
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center' }}>
+                <Puzzle />
+            </Box>
+
+            <Box sx={{ width: 1/4 }}>
+                <Box sx={{ height: 90 }} />
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                    {Array.from(new Array(45)).map((item, index) => (<Player />))}
                 </Box>
+            </Box>
 
-                <Box sx={{ width: 1/4 }}>
-                    <Box sx={{ height: 90 }} />
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                        {Array.from(new Array(45)).map((item, index) => (<Player />))}
-                    </Box>
-                </Box>
-
-            </Grid>
-        </Container>
+        </Grid>
     );
 }
 
