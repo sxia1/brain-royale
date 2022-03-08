@@ -5,10 +5,23 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
 import LinearProgress from '@mui/material/LinearProgress';
+import Tooltip from '@mui/material/Tooltip';
+
+
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
+import SportsMmaIcon from '@mui/icons-material/SportsMma';
+import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
+
+import ShuffleIcon from '@mui/icons-material/Shuffle';
+import ShuffleOnIcon from '@mui/icons-material/ShuffleOn';
+
 
 
 import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, grey, blueGrey } from '@mui/material/colors';
@@ -58,22 +71,32 @@ function AttackStyle2(props) {
     }
 
     return (
+        <Box>
         <ToggleButtonGroup size="small" exclusive aria-label="attack style"
             orientation={props.orientation || 'horizontal'}
-            color="primary"
-            value={attack}
+            color="error" value={attack}
+            sx={{ height: 30, width: 'auto', fontSize: 8 }}
             onChange={handleChange} >
 
-            <ToggleButton value="loss" aria-label="loss">
-                Loss
+            <ToggleButton value="loss" aria-label="loss" sx={{ fontSize: 12 }}>
+                <Tooltip title="send a puzzle to the worst performing player and destroy their dreams of being big brain">
+                    <span>Loss {attack == "loss" ? <KeyboardDoubleArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> : <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                </Tooltip>
             </ToggleButton>
-            <ToggleButton value="retaliation" aria-label="retaliation">
-                Retaliation
+
+            <ToggleButton value="retaliation" aria-label="retaliation" sx={{ fontSize: 12 }}>
+                <Tooltip title="retaliate against a person who sent you a puzzle">
+                    <span>Retaliation {attack == "retaliation" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                </Tooltip>
             </ToggleButton>
-            <ToggleButton value="random" aria-label="random">
-                Random
+
+            <ToggleButton value="random" aria-label="random" sx={{ fontSize: 12 }}>
+                <Tooltip title="send some rando a puzzle">
+                    <span>Random {attack == "random" ? <ShuffleOnIcon fontSize="small" sx={{ ml: 1/2 }} /> : <ShuffleIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                </Tooltip>
             </ToggleButton>
         </ToggleButtonGroup>
+        </Box>
     );
 
 }
