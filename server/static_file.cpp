@@ -1,5 +1,4 @@
-#include <fstream>
-#include <cstring>
+#include "static_file.h"
 
 char* readFiletoBuffer(std::string filename){
     std::ifstream file(filename, std::ios::binary | std::ios::ate);

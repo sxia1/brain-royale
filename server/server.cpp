@@ -7,36 +7,31 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+
+#include "static_file.h"
+
 #define PORT 8080
 
-const char hello[] = "HTTP/1.1 200 OK\r\n"
-    "Connection: close\r\n"
-    "Content-type: text/html\r\n"
-    "\r\n"
-    "<html>\r\n"
-    "<head>\r\n"
-    "<title>Hello, world!</title>\r\n"
-    "</head>\r\n"
-    "<body>\r\n"
-    "<h1>Hello, world!</h1>\r\n"
-    "</body>\r\n"
-    "</html>\r\n\r\n";           
-
-const char home[] = "HTTP/1.1 200 OK\r\n"
-    "Connection: close\r\n"
-    "Content-type: text/html\r\n"
-    "\r\n"
-    "<html>\r\n"
-    "<head>\r\n"
-    "<title>Hello, welcome home!</title>\r\n"
-    "</head>\r\n"
-    "<body>\r\n"
-    "<h1>Hello, welcome home!</h1>\r\n"
-    "</body>\r\n"
-    "</html>\r\n\r\n";           
-
 int main(int argc, char const *argv[]){
-    int ctr = 0;
+    const char *indexfile = readFiletoBuffer("index.html");
+    const char *cssfile = readFiletoBuffer("index.css");
+
+    char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
+        "Connection: close\r\n"
+        "Content-type: text/html\r\n"
+        "\r\n";
+
+    char css[strlen(cssfile)+128] = "HTTP/1.1 200 OK\r\n"
+        "Connection: close\r\n"
+        "Content-type: text/css\r\n"
+        "\r\n";
+
+    strcat(hello, indexfile);
+    strcat(css, cssfile);
+
+    std::cout << "index.html: " << hello << std::endl;
+    std::cout << "index.css: " << css << std::endl;
+
     struct sockaddr_in address;
     int opt = 1;
     int server_fd;
@@ -73,16 +68,14 @@ int main(int argc, char const *argv[]){
             exit(EXIT_FAILURE);
         }
         valread = read( new_socket , buffer, 1024);
-        ctr ++;
-        std::cout << ctr << ": " << valread << std::endl;
         std::cout << buffer << std::endl;
-        if(strstr(buffer, "home")){
-            send(new_socket , home, strlen(hello) , 0 );
-        }
-        else{
-            send(new_socket , hello , strlen(hello) , 0 );
-        }
+        if(strstr(buffer, "css"))
+            send(new_socket, css, strlen(css), 0);
+        else
+            send(new_socket, hello, strlen(hello), 0 );
         printf("Hello message sent\n");
         close(new_socket);
     }
+    delete indexfile;
+    delete cssfile;
 }
