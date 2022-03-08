@@ -86,4 +86,5 @@ int main(int argc, char const *argv[]){
     }
     delete indexfile;
     delete cssfile;
+    delete jsfile;
 }
