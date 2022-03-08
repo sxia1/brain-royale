@@ -143,7 +143,7 @@ function Puzzle(props) {
             </Box>
             <Skeleton variant="rectangular" animation="wave" 
                 sx={{ bgcolor: '#cfd8dc' }} 
-                height={300} width={450} />
+                height={450} width={600} />
         </Box>
     );
 }

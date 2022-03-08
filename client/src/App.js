@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 
 function App() {
   return (
-    <Container sx={{ mt: 4 }}>
+    <Container maxWidth={false} sx={{ mt: 4, mx: 0 }}>
       <Game />
     </Container>
   );

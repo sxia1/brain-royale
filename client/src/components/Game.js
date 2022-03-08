@@ -16,11 +16,14 @@ import Player from './Player';
 
 function Game(props) {
     return (
-        <Grid container sx={{ justifyContent: 'space-between', alignContent: 'flex-start', width: '100%' }}>
-            <Box sx={{ width: 1/4 }}>
+        <Grid container sx={{ justifyContent: 'space-around', alignContent: 'flex-start', 
+            width: '100%' }}>
+
+            <Box sx={{ width: 1/5 }}>
                 <Box sx={{ height: 90 }} />
+
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                    {Array.from(new Array(45)).map((item, index) => (<Player />))}
+                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
 
@@ -28,10 +31,11 @@ function Game(props) {
                 <Puzzle />
             </Box>
 
-            <Box sx={{ width: 1/4 }}>
+            <Box sx={{ width: 1/5 }}>
                 <Box sx={{ height: 90 }} />
+
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                    {Array.from(new Array(45)).map((item, index) => (<Player />))}
+                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
 

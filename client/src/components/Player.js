@@ -46,7 +46,7 @@ function Player(props) {
     // opacity: `${Math.random() * (.25) + .75}`, 
     return (
         <Box sx={{ background: `linear-gradient(to right bottom, ${colors.slice(0,2).join(',')})`, 
-            width: 45, height: 45, p: 1.5, m: 1/3, borderRadius: 28 }} 
+            width: 50, height: 50, p: 1.5, m: 1/3, borderRadius: 28 }} 
             onMouseEnter={() => setShade(shade + 1)}
             onMouseLeave={() => setShade(shade - 1)} >
             <img src={icon} />
