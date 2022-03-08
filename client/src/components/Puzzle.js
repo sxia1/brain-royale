@@ -91,7 +91,6 @@ function Puzzle(props) {
     }, []);
 
     let progressBarColor = blue[700]; 
-
     if (count > 14) {
         progressBarColor = red[900];
     }
@@ -102,13 +101,16 @@ function Puzzle(props) {
         progressBarColor = deepPurple[500];
     }
 
+    // let attack = <AttackStyle />; 
+    let attack = <AttackStyle2 />; 
+
     return (
         <Box>
             <PuzzleTimer count={count} />
-            <Box container sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center' }}>
+            <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
+                    justifyContent: 'space-between', alignItems: 'center' }}>
 
-                <AttackStyle />
-                <AttackStyle2 />
+                {attack}
                 <PuzzleCounter />
             </Box>
             <Box color={progressBarColor} sx={{ pt: 2 }}>
