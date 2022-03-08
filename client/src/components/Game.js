@@ -22,7 +22,7 @@ function Game(props) {
             <Box sx={{ width: 1/5 }}>
                 <Box sx={{ height: 90 }} />
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
                     {Array.from(new Array(50)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
@@ -34,7 +34,7 @@ function Game(props) {
             <Box sx={{ width: 1/5 }}>
                 <Box sx={{ height: 90 }} />
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
                     {Array.from(new Array(50)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
