@@ -11,10 +11,14 @@
 #include "static_file.h"
 
 #define PORT 8080
+#define INDEX "../client/build/index.html"
+#define CSS "../client/build/static/css/main.26bfa704.css"
+#define JS "../client/build/static/js/main.d4262ebc.js"
 
 int main(int argc, char const *argv[]){
-    const char *indexfile = readFiletoBuffer("index.html");
-    const char *cssfile = readFiletoBuffer("index.css");
+    const char *indexfile = readFiletoBuffer(INDEX);
+    const char *cssfile = readFiletoBuffer(CSS);
+    const char *jsfile = readFiletoBuffer(JS);
 
     char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
         "Connection: close\r\n"
@@ -26,11 +30,16 @@ int main(int argc, char const *argv[]){
         "Content-type: text/css\r\n"
         "\r\n";
 
+    char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
+        "Connection: close\r\n"
+        "Content-type: application/javascript; charset=utf-8\r\n"
+        "\r\n";
+
     strcat(hello, indexfile);
     strcat(css, cssfile);
+    strcat(js, jsfile);
 
-    std::cout << "index.html: " << hello << std::endl;
-    std::cout << "index.css: " << css << std::endl;
+    std::cout << "DONE LOADING FILES" << std::endl;
 
     struct sockaddr_in address;
     int opt = 1;
@@ -69,10 +78,9 @@ int main(int argc, char const *argv[]){
         }
         valread = read( new_socket , buffer, 1024);
         std::cout << buffer << std::endl;
-        if(strstr(buffer, "css"))
-            send(new_socket, css, strlen(css), 0);
-        else
-            send(new_socket, hello, strlen(hello), 0 );
+        if(strstr(buffer, "css")) send(new_socket, css, strlen(css), 0);
+        else if(strstr(buffer, "js")) send(new_socket, js, strlen(js), 0);
+        else send(new_socket, hello, strlen(hello), 0 );
         printf("Hello message sent\n");
         close(new_socket);
     }
