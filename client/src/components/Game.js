@@ -15,6 +15,10 @@ import Player from './Player';
 
 
 function Game(props) {
+    // 99 - 1 = 98 / 2 = 49 
+    let numPlayers = (31 - 1)/2;
+
+
     return (
         <Grid container sx={{ justifyContent: 'space-around', alignContent: 'flex-start', 
             width: '100%' }}>
@@ -23,7 +27,7 @@ function Game(props) {
                 <Box sx={{ height: 90 }} />
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
+                    {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
 
@@ -35,7 +39,7 @@ function Game(props) {
                 <Box sx={{ height: 90 }} />
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
+                    {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
                 </Box>
             </Box>
 
