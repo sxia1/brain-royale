@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
-import LinearProgress from '@mui/material/LinearProgress';
 import Tooltip from '@mui/material/Tooltip';
 
+import LinearProgress from '@mui/material/LinearProgress';
 
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -38,13 +38,13 @@ function PuzzleCounter(props) {
 }
 
 function PuzzleTimer(props) {
-    let countdown = `00:${props.count < 0 ? '00' : (20-props.count).toString().padStart(2, "0")}`
+    let countdown = `00:${props.count < 0 ? '00' : (props.max-props.count).toString().padStart(2, "0")}`
 
     return (
         <Box>
             <Typography variant="h3" gutterBottom component="div" 
                 sx={{ fontFamily: 'Monospace', textAlign: 'center', 
-                        color: (20 - props.count > 9 || props.count < 0 ? '#000000' : '#b71c1c') }}>
+                        color: (props.max - props.count > (props.max * .5) || props.count < 0 ? '#000000' : '#b71c1c') }}>
                 {countdown}
             </Typography>
         </Box>
@@ -52,18 +52,6 @@ function PuzzleTimer(props) {
 }
 
 function AttackStyle(props) {
-    // https://mui.com/components/button-group/#split-button could also be nice 
-    return (
-        <ButtonGroup size="small" variant="contained" aria-label="outlined primary button group">
-            <Button>Loss</Button>
-            <Button>Retaliation</Button>
-            <Button>Random</Button>
-        </ButtonGroup>
-    );
-
-}
-
-function AttackStyle2(props) {
     const [attack, setAttack] = React.useState('loss');
     
     function handleChange(event, value) {
@@ -80,19 +68,19 @@ function AttackStyle2(props) {
 
             <ToggleButton value="loss" aria-label="loss" sx={{ fontSize: 12 }}>
                 <Tooltip title="send a puzzle to the worst performing player and destroy their dreams of being big brain">
-                    <span>Loss {attack == "loss" ? <KeyboardDoubleArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> : <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                    <span>Loss {attack === "loss" ? <KeyboardDoubleArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> : <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
                 </Tooltip>
             </ToggleButton>
 
             <ToggleButton value="retaliation" aria-label="retaliation" sx={{ fontSize: 12 }}>
                 <Tooltip title="retaliate against a person who sent you a puzzle">
-                    <span>Retaliation {attack == "retaliation" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                    <span>Retaliation {attack === "retaliation" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
                 </Tooltip>
             </ToggleButton>
 
             <ToggleButton value="random" aria-label="random" sx={{ fontSize: 12 }}>
                 <Tooltip title="send some rando a puzzle">
-                    <span>Random {attack == "random" ? <ShuffleOnIcon fontSize="small" sx={{ ml: 1/2 }} /> : <ShuffleIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                    <span>Random {attack === "random" ? <ShuffleOnIcon fontSize="small" sx={{ ml: 1/2 }} /> : <ShuffleIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
                 </Tooltip>
             </ToggleButton>
         </ToggleButtonGroup>
@@ -104,9 +92,11 @@ function AttackStyle2(props) {
 function Puzzle(props) {
     const [count, setCount] = React.useState(0);
 
+    let max = 10;
+
     React.useEffect(() => {
         const timer = setInterval(() => {
-            setCount((prevCount) => (prevCount >= 20 ? -1 : prevCount + 1));
+            setCount((prevCount) => (prevCount >= max ? -1 : prevCount + 1));
         }, 1000);
         return () => {
             clearInterval(timer);
@@ -114,33 +104,31 @@ function Puzzle(props) {
     }, []);
 
     let progressBarColor = blue[700]; 
-    if (count > 14) {
+    if (count > max * .75) {
         progressBarColor = red[900];
     }
-    else if (count > 10) {
+    else if (count > max * .5) {
         progressBarColor = red[500];
     }
-    else if (count > 6) {
+    else if (count > max * .25) {
         progressBarColor = deepPurple[500];
     }
 
-    // let attack = <AttackStyle />; 
-    let attack = <AttackStyle2 />; 
 
     return (
         <Box>
-            <PuzzleTimer count={count} />
+            <PuzzleTimer count={count} max={max} />
             <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
                     justifyContent: 'space-between', alignItems: 'center' }}>
-
-                {attack}
+                <AttackStyle />
                 <PuzzleCounter />
             </Box>
             <Box color={progressBarColor} sx={{ pt: 2 }}>
                 <LinearProgress variant="determinate" sx={{ height: 5 }}
                     color='inherit'
-                    value={count * 5} />
+                    value={count * (100/max) } />
             </Box>
+
             <Skeleton variant="rectangular" animation="wave" 
                 sx={{ bgcolor: '#cfd8dc' }} 
                 height={450} width={600} />
