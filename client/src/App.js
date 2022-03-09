@@ -8,14 +8,14 @@ import Box from '@mui/material/Box';
 
 /*
 
-      <Landing />
-      <Box sx={{ height: 50}}/>
 
 */
 
 function App() {
   return (
     <Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
+      <Landing />
+      <Box sx={{ height: '100vh'}}/>
       <Game />
     </Container>
   );
