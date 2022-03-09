@@ -7,15 +7,17 @@
 #include <cstring>
 #include <string>
 #include <iostream>
-
+#include "Router.h"
 #include "static_file.h"
 
 #define PORT 8080
+/*
 #define INDEX "../client/build/index.html"
 #define CSS "../client/build/static/css/main.26bfa704.css"
 #define JS "../client/build/static/js/main.d4262ebc.js"
-
+*/
 int main(int argc, char const *argv[]){
+/*    
     const char *indexfile = readFiletoBuffer(INDEX);
     const char *cssfile = readFiletoBuffer(CSS);
     const char *jsfile = readFiletoBuffer(JS);
@@ -40,7 +42,7 @@ int main(int argc, char const *argv[]){
     strcat(js, jsfile);
 
     std::cout << "DONE LOADING FILES" << std::endl;
-
+*/
     struct sockaddr_in address;
     int opt = 1;
     int server_fd;
@@ -67,6 +69,7 @@ int main(int argc, char const *argv[]){
         perror("listen");
         exit(EXIT_FAILURE);
     }
+    Router router = Router();
     while(1){
         int new_socket, valread;
         int addrlen = sizeof(address);
@@ -78,13 +81,18 @@ int main(int argc, char const *argv[]){
         }
         valread = read( new_socket , buffer, 1024);
         std::cout << buffer << std::endl;
+        char * response = router.respond(buffer);
+        std::cout << "response found\n";
+        std::cout << "response: " << response << "\n";
+        send(new_socket, response, strlen(response), 0);
+        /*
         if(strstr(buffer, "css")) send(new_socket, css, strlen(css), 0);
         else if(strstr(buffer, "js")) send(new_socket, js, strlen(js), 0);
         else send(new_socket, hello, strlen(hello), 0 );
+        */
         printf("Hello message sent\n");
         close(new_socket);
     }
-    delete indexfile;
-    delete cssfile;
-    delete jsfile;
+    
+    
 }
