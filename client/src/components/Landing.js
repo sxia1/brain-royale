@@ -15,7 +15,6 @@ function GamePlayModeButtons(prop) {
         <Box container sx={{ justifyContent: 'space-around', alignContent: 'flex-start' }} >
             <Button variant="contained" sx={{ m: 1 }} >Tutorial</Button>
             <Button variant="contained" sx={{ m: 1 }} >Join Game</Button>
-            <Button variant="contained" sx={{ m: 1 }} >Private Party</Button>
             <TextField id="outlined-basic" variant="outlined" size="small" sx={{ m: 1 }} 
                 label="Private Party" />
         </Box>
