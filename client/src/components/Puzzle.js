@@ -28,11 +28,15 @@ import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, gre
 
 
 function PuzzleCounter(props) {
+    const [countPuzzles, setCountPuzzles] = React.useState(0);
+    const [countSent, setCountSent] = React.useState(0);
+    const [maxPuzzles, setMaxPuzzles] = React.useState(20);
+
     return (
         <Box sx={{ align: 'right' }} > 
-            <Typography component="span"> N </Typography>
-            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ M) </Typography>
-            <Typography component="span" > 🧩 / 20 </Typography>
+            <Typography component="span"> {countPuzzles} </Typography>
+            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ {countSent}) </Typography>
+            <Typography component="span" > 🧩 / {maxPuzzles} </Typography>
         </Box>
     );
 }
