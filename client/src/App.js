@@ -2,6 +2,7 @@ import Landing from './components/Landing';
 import Game from './components/Game';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import './socket';
 
 function App() {
   return (
