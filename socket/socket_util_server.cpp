@@ -18,7 +18,11 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     // s->get_alog().write(websocketpp::log::alevel::app, "Received Reply: "+msg->get_payload());
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
-    s->close(hdl,websocketpp::close::status::normal,"");
+    // s->close(hdl,websocketpp::close::status::normal,"");
+}
+
+void on_close(server* s, websocketpp::connection_hdl) {
+    std::cout << "Some connection closed" << std::endl;
 }
 
 class utility_server {
@@ -27,6 +31,7 @@ public:
          // Set logging settings
         m_endpoint.set_error_channels(websocketpp::log::elevel::all);
         m_endpoint.set_access_channels(websocketpp::log::alevel::all ^ websocketpp::log::alevel::frame_payload);
+        m_endpoint.set_close_handler(std::bind(&on_close, &m_endpoint, std::placeholders::_1));
         m_endpoint.set_message_handler(std::bind(&on_message, &m_endpoint, std::placeholders::_1, std::placeholders::_2));
  
         // Initialize Asio

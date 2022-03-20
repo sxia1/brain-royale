@@ -9,3 +9,8 @@ socket.addEventListener('open', function (event) {
 socket.addEventListener('message', function (event) {
     console.log('Message from server ', JSON.parse(event.data));
 });
+
+var sendSomething = function(data) {
+    var newEvent = {type: 'connected', data: data};
+    socket.send(JSON.stringify(newEvent));
+}
