@@ -1,18 +1,23 @@
 // The ASIO_STANDALONE define is necessary to use the standalone version of Asio.
 // Remove if you are using Boost Asio.
 #define ASIO_STANDALONE
- 
+
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 #include <iostream>
  
 #include <functional>
- 
+
+#include "json.hpp"
+
 typedef websocketpp::server<websocketpp::config::asio> server;
 typedef websocketpp::config::asio::message_type::ptr message_ptr;
+typedef nlohmann::json json;
 
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
-    s->get_alog().write(websocketpp::log::alevel::app, "Received Reply: "+msg->get_payload());
+    // s->get_alog().write(websocketpp::log::alevel::app, "Received Reply: "+msg->get_payload());
+    json message = json::parse(msg->get_payload());
+    std::cout << message << std::endl;
     s->close(hdl,websocketpp::close::status::normal,"");
 }
 
