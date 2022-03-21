@@ -17,6 +17,7 @@
 #define JS "../client/build/static/js/main.d4262ebc.js"
 */
 int main(int argc, char const *argv[]){
+    //std::cout << "port: " << PORT << "\n";
 /*    
     const char *indexfile = readFiletoBuffer(INDEX);
     const char *cssfile = readFiletoBuffer(CSS);

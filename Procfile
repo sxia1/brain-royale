@@ -1,1 +1,1 @@
-web: cd server && ./server
+web: cd server && sudo ./server
