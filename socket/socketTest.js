@@ -11,6 +11,6 @@ socket.addEventListener('message', function (event) {
 });
 
 var sendSomething = function(data) {
-    var newEvent = {type: 'connected', data: data};
+    var newEvent = {type: 'arbitrary', data: data};
     socket.send(JSON.stringify(newEvent));
 }
