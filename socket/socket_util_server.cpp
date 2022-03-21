@@ -4,9 +4,8 @@
 
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
-#include <iostream>
- 
 #include <functional>
+#include <iostream>
 
 #include "json.hpp"
 
@@ -17,7 +16,7 @@ typedef nlohmann::json json;
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     // s->get_alog().write(websocketpp::log::alevel::app, "Received Reply: "+msg->get_payload());
     json message = json::parse(msg->get_payload());
-    std::cout << message << std::endl;
+    // std::cout << message << std::endl;
     // s->close(hdl,websocketpp::close::status::normal,"");
 }
 
@@ -36,7 +35,7 @@ public:
  
         // Initialize Asio
         m_endpoint.init_asio();
-    }
+    }`
  
     void run() {
         // Listen on port 9002
