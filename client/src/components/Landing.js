@@ -14,17 +14,28 @@ import TextField from '@mui/material/TextField';
 
 
 function GamePlayModeButtons(prop) {
+    const [value, setValue] = React.useState();
+
+    const handleChange = (event) => {
+        console.log(event.target.value);
+        setValue(event.target.value);
+    };
+
+
     return (
         <Stack direction="row" 
            sx={{ justifyContent: 'center', my: 2 }} > 
             <Button variant="contained" sx={{ m: 1 }} >Tutorial</Button>
             <Button variant="contained" sx={{ m: 1 }} >Join Game</Button>
             <TextField id="outlined-basic" variant="outlined" size="small" sx={{ m: 1 }} 
+                value={value}
+                onChange={handleChange}
                 label="Private Party" />
         </Stack>
     );
 
 }
+
 
 
 function Landing() {
