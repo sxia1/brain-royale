@@ -10,14 +10,14 @@
 #include "Router.h"
 #include "static_file.h"
 
-#define PORT 8080//(getenv("PORT") || 80)
+#define PORT std::stoi(getenv("PORT"))
 /*
 #define INDEX "../client/build/index.html"
 #define CSS "../client/build/static/css/main.26bfa704.css"
 #define JS "../client/build/static/js/main.d4262ebc.js"
 */
 int main(int argc, char const *argv[]){
-    //std::cout << "port: " << PORT << "\n";
+    std::cout << "port: " << PORT << "\n";
 /*    
     const char *indexfile = readFiletoBuffer(INDEX);
     const char *cssfile = readFiletoBuffer(CSS);
