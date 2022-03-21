@@ -13,7 +13,7 @@ json get_new_puzzzle(server *s, const websocketpp:connection_hdl & hdl, message_
 
 bool solution_correct(server *s, const websocketpp:connection_hdl & hdl, message_ptr & msg);
 
-void game_over(server *s, constwebsocketpp:connection_hdl & hdl, message_ptr & msg);
+void game_over(server *s,  const websocketpp::connection_hdl & hdl, message_ptr & msg);
 
 json player_preview(server *s, const websocketpp:connection_hdl & hdl, message_ptr & msg);
 
