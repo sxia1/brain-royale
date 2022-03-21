@@ -10,7 +10,7 @@
 #include "Router.h"
 #include "static_file.h"
 
-#define PORT 80
+#define PORT (getenv("PORT") || 80)
 /*
 #define INDEX "../client/build/index.html"
 #define CSS "../client/build/static/css/main.26bfa704.css"
