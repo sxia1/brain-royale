@@ -1,24 +1,41 @@
-//import logo from './logo.svg';
-//import './App.css';
+import { Outlet, Link } from "react-router-dom";
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+import {
+	useParams,
+	useNavigate,
+	useLocation,
+} from "react-router-dom";
+
+import './socket';
 
 import Landing from './components/Landing';
 import Game from './components/Game';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
 
-/*
 
-      <Landing />
-      <Box sx={{ height: 50}}/>
 
-*/
 
 function App() {
-  return (
-    <Container maxWidth={false} sx={{ mt: 4, mx: 0 }}>
-      <Game />
+
+	let navigate = useNavigate();
+	let location = useLocation();
+	let params = useParams();
+
+	return (
+    <Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
+
+        <Typography variant="h2" component="div" sx={{ textAlign: 'center', my: 2 }}
+			onClick={() => {
+			navigate("/"); }} >
+			Brain Royale
+		</Typography>
+
+        <Outlet />
+
     </Container>
-  );
+	);
 }
 
 export default App;

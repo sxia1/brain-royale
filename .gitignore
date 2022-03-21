@@ -31,6 +31,17 @@
 *.out
 *.app
 
+# vim swap files 
+.sw[a-p]
+.*.sw[a-p]
+
+# os x files
+.DS_Store
+._*
+_*
+.Spotlight*
+.Trashes
+
 # build
 node_modules
 build
