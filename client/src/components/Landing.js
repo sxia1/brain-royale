@@ -11,10 +11,22 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+import { Outlet, Link } from "react-router-dom";
+
+import {
+	useParams,
+	useNavigate,
+	useLocation,
+} from "react-router-dom";
 
 
 function GamePlayModeButtons(prop) {
     const [value, setValue] = React.useState();
+
+	let navigate = useNavigate();
+	let location = useLocation();
+	let params = useParams();
+
 
     const handleChange = (event) => {
         console.log(event.target.value);
@@ -25,8 +37,19 @@ function GamePlayModeButtons(prop) {
     return (
         <Stack direction="row" 
            sx={{ justifyContent: 'center', my: 2 }} > 
-            <Button variant="contained" sx={{ m: 1 }} >Tutorial</Button>
-            <Button variant="contained" sx={{ m: 1 }} >Join Game</Button>
+
+            <Button variant="contained" sx={{ m: 1 }}
+				onClick={() => {
+				navigate("/tutorial"); }} >
+				Tutorial
+			</Button>
+
+            <Button variant="contained" sx={{ m: 1 }} 
+				onClick={() => {
+				navigate("/join"); }} >
+				Join Game
+			</Button>
+
             <TextField id="outlined-basic" variant="outlined" size="small" sx={{ m: 1 }} 
                 value={value}
                 onChange={handleChange}
@@ -46,9 +69,6 @@ function Landing() {
             m: 5
             }}>
             <Box>
-                <Typography variant="h2" component="div" sx={{ textAlign: 'center', my: 2 }}>
-                Brain Royale
-                </Typography>
             </Box>
             <GamePlayModeButtons />
         </Grid>
