@@ -4,9 +4,9 @@
 #include <iostream>
 #include "static_file.h"
 
-#define INDEX "../client/build/index.html"
-#define CSS "../client/build/static/css/main.26bfa704.css"
-#define JS "../client/build/static/js/main.d4262ebc.js"
+#define INDEX "../build/index.html"
+#define CSS "../build/static/css/main.26bfa704.css"
+#define JS "../build/static/js/main.d4262ebc.js"
 
 Router::Router(){
     const char *indexfile = readFiletoBuffer(INDEX);

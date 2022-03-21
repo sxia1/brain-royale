@@ -1,6 +1,5 @@
 all: server/server.o server/static_file.o server/request.o server/Router.o
-	cd client; npm install; npm run build;\
-  cd ../server; g++ -o server server.o static_file.o request.o Router.o
+	cd server; g++ -o server server.o static_file.o request.o Router.o
 	
 server.o: server.cpp static_file.h request.h
 	cd server; g++ -c server.cpp

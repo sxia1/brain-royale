@@ -83,7 +83,7 @@ int main(int argc, char const *argv[]){
         std::cout << buffer << std::endl;
         char * response = router.respond(buffer);
         std::cout << "response found\n";
-        std::cout << "response: " << response << "\n";
+    //    std::cout << "response: " << response << "\n";
         send(new_socket, response, strlen(response), 0);
         /*
         if(strstr(buffer, "css")) send(new_socket, css, strlen(css), 0);
