@@ -4,12 +4,9 @@
 
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
-<<<<<<< HEAD
 #include <iostream>
 #include <string>
  
-=======
->>>>>>> f435d80e47467e13477366fc1ce08021415535ad
 #include <functional>
 #include <iostream>
 
