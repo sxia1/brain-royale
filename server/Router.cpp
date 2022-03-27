@@ -6,7 +6,7 @@
 
 #define INDEX "../client/build/index.html"
 #define CSS "../client/build/static/css/main.26bfa704.css"
-#define JS "../client/build/static/js/main.d4262ebc.js"
+#define JS "../client/build/static/js/main.179a5f96.js"
 
 Router::Router(){
     const char *indexfile = readFiletoBuffer(INDEX);
@@ -72,7 +72,7 @@ char* Router::respond(char* req){
            std::cout << "css\n";
         return css;
     }
-    else if (target.compare("/static/js/main.d4262ebc.js")==0){
+    else if (target.compare("/static/js/main.179a5f96.js")==0){
 /*        const char *jsfile = readFiletoBuffer(JS);
         char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
             "Connection: close\r\n"

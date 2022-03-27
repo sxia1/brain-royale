@@ -14,33 +14,39 @@ import Player from './Player';
 
 
 
-function Game(props) {
-    return (
-        <Grid container sx={{ justifyContent: 'space-around', alignContent: 'flex-start', 
-            width: '100%' }}>
+class Game extends React.Component {
+    render() {
+        // 99 - 1 = 98 / 2 = 49 
+        let numPlayers = (31 - 1)/2;
 
-            <Box sx={{ width: 1/5 }}>
-                <Box sx={{ height: 90 }} />
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
+        return (
+            <Grid container sx={{ justifyContent: 'space-around', alignContent: 'flex-start', 
+                width: '100%' }}>
+
+                <Box sx={{ width: 1/5 }}>
+                    <Box sx={{ height: 90 }} />
+
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+                        {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
+                    </Box>
                 </Box>
-            </Box>
 
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center' }}>
-                <Puzzle />
-            </Box>
-
-            <Box sx={{ width: 1/5 }}>
-                <Box sx={{ height: 90 }} />
-
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                    {Array.from(new Array(50)).map((item, index) => (<Player />))}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignContent: 'center' }}>
+                    <Puzzle />
                 </Box>
-            </Box>
 
-        </Grid>
-    );
+                <Box sx={{ width: 1/5 }}>
+                    <Box sx={{ height: 90 }} />
+
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+                        {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
+                    </Box>
+                </Box>
+
+            </Grid>
+        );
+    };
 }
 
 export default Game; 

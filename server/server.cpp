@@ -10,39 +10,11 @@
 #include "Router.h"
 #include "static_file.h"
 
-#define PORT 8080
-/*
-#define INDEX "../client/build/index.html"
-#define CSS "../client/build/static/css/main.26bfa704.css"
-#define JS "../client/build/static/js/main.d4262ebc.js"
-*/
+#define PORT std::stoi(getenv("PORT"))
+
 int main(int argc, char const *argv[]){
-/*    
-    const char *indexfile = readFiletoBuffer(INDEX);
-    const char *cssfile = readFiletoBuffer(CSS);
-    const char *jsfile = readFiletoBuffer(JS);
+    std::cout << "port: " << PORT << "\n";
 
-    char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
-        "Connection: close\r\n"
-        "Content-type: text/html\r\n"
-        "\r\n";
-
-    char css[strlen(cssfile)+128] = "HTTP/1.1 200 OK\r\n"
-        "Connection: close\r\n"
-        "Content-type: text/css\r\n"
-        "\r\n";
-
-    char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
-        "Connection: close\r\n"
-        "Content-type: application/javascript; charset=utf-8\r\n"
-        "\r\n";
-
-    strcat(hello, indexfile);
-    strcat(css, cssfile);
-    strcat(js, jsfile);
-
-    std::cout << "DONE LOADING FILES" << std::endl;
-*/
     struct sockaddr_in address;
     int opt = 1;
     int server_fd;
@@ -69,6 +41,7 @@ int main(int argc, char const *argv[]){
         perror("listen");
         exit(EXIT_FAILURE);
     }
+    std::cout << "port: " << PORT << "\n";
     Router router = Router();
     while(1){
         int new_socket, valread;
@@ -83,16 +56,9 @@ int main(int argc, char const *argv[]){
         std::cout << buffer << std::endl;
         char * response = router.respond(buffer);
         std::cout << "response found\n";
-        std::cout << "response: " << response << "\n";
         send(new_socket, response, strlen(response), 0);
-        /*
-        if(strstr(buffer, "css")) send(new_socket, css, strlen(css), 0);
-        else if(strstr(buffer, "js")) send(new_socket, js, strlen(js), 0);
-        else send(new_socket, hello, strlen(hello), 0 );
-        */
         printf("Hello message sent\n");
         close(new_socket);
     }
-    
     
 }
