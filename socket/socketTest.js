@@ -1,4 +1,4 @@
-const SOCKET_URL = 'ws://localhost:8000';
+const SOCKET_URL = 'ws://localhost:8080';
 const socket = new WebSocket(SOCKET_URL);
 
 socket.addEventListener('open', function (event) {
