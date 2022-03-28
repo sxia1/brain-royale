@@ -1,0 +1,35 @@
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+
+import Button from '@mui/material/Button';
+
+//to use: <ColorMatch handler={handleSolve}>
+function ColorMatch(props){
+  //const [solved, setSolved] = React.useState(-1); //-1: not acted, 0: incorrect, 1: correct
+  const colors = ["error", "warning", "success", "primary", "secondary"];
+  const words = ["Red", "Orange", "Green", "Blue", "Purple"];
+  const types = ["Word", "Color"];
+  let type = Math.floor(Math.random()*2);
+  
+  let colorA = Math.floor(Math.random()*5);
+  let colorB = Math.floor(Math.random()*4);
+  if(colorB >= colorA){
+    colorB ++;
+  }
+  
+  let targetWords = [words[colorA], words[colorB]];
+  let targetColors = [colors[colorA], colors[colorB]];
+  
+  let target = Math.floor(Math.random()*2);
+
+  return (
+    <div>
+      <br></br>
+      <h1>Choose {types[type]} {targetWords[target]}</h1>
+      <br></br>
+      <Button variant="outlined" size="large" color={colors[colorA]}>{words[colorB]}</Button>
+      <Button variant="outlined" size="large" color={colors[colorB]}>{words[colorA]}</Button>
+    </div>
+  );
+}
+export default ColorMatch;

@@ -22,7 +22,7 @@ import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import ShuffleOnIcon from '@mui/icons-material/ShuffleOn';
 
-
+import ColorMatch from './ColorMatch';
 
 import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, grey, blueGrey } from '@mui/material/colors';
 
@@ -132,12 +132,17 @@ function Puzzle(props) {
                     color='inherit'
                     value={count * (100/max) } />
             </Box>
+            <Box container sx={{ height:450, width:600, justifyContent:'space-between', alignItems: 'center' }}>
+                <ColorMatch/>
+            </Box>
 
-            <Skeleton variant="rectangular" animation="wave" 
-                sx={{ bgcolor: '#cfd8dc' }} 
-                height={450} width={600} />
-        </Box>
+       </Box>
     );
 }
 
+/*
+            <Skeleton variant="rectangular" animation="wave" 
+                sx={{ bgcolor: '#cfd8dc' }} 
+                height={450} width={600} />
+ */
 export default Puzzle; 
