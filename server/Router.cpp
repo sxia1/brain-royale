@@ -15,6 +15,7 @@ Router::Router(){
     hello = new char[strlen(indexfile)+128];
     css = new char[strlen(cssfile)+128];
     js = new char[strlen(jsfile)+128];
+    web = new char[1028];
 
     strcpy(hello,"HTTP/1.1 200 OK\r\n"
         "Connection: close\r\n"
@@ -34,6 +35,13 @@ Router::Router(){
         "\r\n"
     );
 
+    strcpy(web,"HTTP/1.1 101 Switching Protocols\r\n"
+        "Upgrade: websocket\r\n"
+        "Connection: upgrade\r\n"
+        "Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\n"
+        "Server: Boost.Beast\r\n"
+        "\r\n"
+    );
 
     strcat(hello, indexfile);
     strcat(css, cssfile);
@@ -45,6 +53,7 @@ Router::~Router(){
     delete hello;
     delete css;
     delete js;
+    delete web;
 }
 
 char* Router::respond(char* req){
@@ -89,7 +98,11 @@ char* Router::respond(char* req){
             "Content-type: text/html\r\n"
             "\r\n";
 */ 
-           std::cout << "hello\n";
+            if (r.isUpgrade()){
+                std::cout << "websocket\n";
+                return web;
+            }
+            std::cout << "homepage hello\n";
         return hello;
     }
     

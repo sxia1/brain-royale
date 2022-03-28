@@ -5,6 +5,7 @@ private:
     char* hello;
     char* css;
     char* js;
+    char* web;
 public:
     Router();
     ~Router();
