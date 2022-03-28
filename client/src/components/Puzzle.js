@@ -132,7 +132,7 @@ function Puzzle(props) {
                     color='inherit'
                     value={count * (100/max) } />
             </Box>
-            <Box container sx={{ height:450, width:600, justifyContent:'space-between', alignItems: 'center' }}>
+            <Box container sx={{ height:450, width:600, justifyContent:'space-between', alignItems: 'center', mt: 2 }}>
                 <ColorMatch/>
             </Box>
 
