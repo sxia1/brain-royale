@@ -50,7 +50,7 @@ public:
  
     void run() {
         // Listen on port 9002
-        m_endpoint.listen(8000);
+        m_endpoint.listen(8080);
  
         // Queues a connection accept operation
         m_endpoint.start_accept();
