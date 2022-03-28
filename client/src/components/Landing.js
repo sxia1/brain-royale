@@ -36,7 +36,7 @@ function GamePlayModeButtons(prop) {
 
     return (
         <Stack direction="row" 
-           sx={{ justifyContent: 'center', my: 2 }} > 
+           sx={{ justifyContent: 'center' }} > 
 
             <Button variant="contained" sx={{ m: 1 }}
 				onClick={() => {
