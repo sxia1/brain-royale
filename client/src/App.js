@@ -23,10 +23,11 @@ function App() {
 	let location = useLocation();
 	let params = useParams();
 
+
 	return (
     <Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
 
-        <Typography variant="h2" component="div" sx={{ textAlign: 'center', my: 3 }}
+        <Typography variant={ location['pathname'] == "/" ? "h2" : "h4" } component="div" sx={{ textAlign: 'center', my: 3 }}
 			onClick={() => {
 			navigate("/"); }} >
 			Brain Royale
