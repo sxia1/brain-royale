@@ -1,5 +1,5 @@
 all: server.o static_file.o request.o Router.o
-	g++ -o server -pthread server.o static_file.o request.o Router.o
+	g++ -o server -pthread -lboost_system server.o static_file.o request.o Router.o
 	
 server.o: server.cpp static_file.h request.h
 	g++ -c server.cpp

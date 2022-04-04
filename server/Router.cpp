@@ -100,10 +100,11 @@ char* Router::respond(char* req){
 */ 
             if (r.isUpgrade()){
                 std::cout << "websocket\n";
-                return web;
+                return nullptr;
             }
             std::cout << "homepage hello\n";
         return hello;
     }
     
 }
+
