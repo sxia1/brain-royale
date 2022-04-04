@@ -7,6 +7,7 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 #include <websocketpp/config/core.hpp>
+#include <websocketpp/error.hpp>
 #include <cstring>
 #include <string>
 #include <iostream>
@@ -14,18 +15,24 @@
 #include <functional>
 #include "Router.h"
 #include "static_file.h"
+#include "json.hpp"
 
 #define PORT std::stoi(getenv("PORT"))
 
 //typedef websocketpp::server<websocketpp::config::asio> server;
 typedef websocketpp::server<websocketpp::config::core> server;
-typedef websocketpp::config::asio::message_type::ptr message_ptr;
+//typedef websocketpp::config::asio::message_type::ptr message_ptr;
+typedef websocketpp::message_buffer::message<websocketpp::message_buffer::alloc::con_msg_manager> message_type;
+typedef websocketpp::message_buffer::alloc::con_msg_manager<message_type> con_msg_man_type;
+typedef server::message_ptr message_ptr;
+typedef nlohmann::json json;
 
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
-void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+    std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
     if (msg->get_opcode() == websocketpp::frame::opcode::text) {
         s->get_alog().write(websocketpp::log::alevel::app,
             "Text Message Received: "+msg->get_payload());
@@ -42,24 +49,48 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     }
 }
 
+void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+    std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
+    s->get_alog().write(websocketpp::log::alevel::app, "Received Reply: "+msg->get_payload());
+    json message = json::parse(msg->get_payload());
+    std::cout << message << std::endl;
+    std::string responseType = message["type"];
+    if (responseType == "connected") {
+        json response = R"({
+            "type" : "connect",
+            "data" : null
+        })"_json;
+        s->send(hdl, response.dump(), msg->get_opcode());
+    }
+    // s->close(hdl,websocketpp::close::status::normal,"");
+}
+
+/*
+std::error_code write_message(websocketpp::connection_hdl hdl, char const*buffer, size_t size) {
+    std::cout << "Hi, this humble write_message function was called!!!" << std::endl;
+    std::cout << buffer << std::endl;
+    return websocketpp::error::make_error_code(websocketpp::error::value::general);
+}
+*/
 void on_close(server* s, websocketpp::connection_hdl) {
     std::cout << "Some connection closed" << std::endl;
 }
 
 class iostream_server {
 public:
-    iostream_server() {
+    iostream_server(std::stringstream *output) {
         // Set logging settings
         s.clear_access_channels(websocketpp::log::alevel::all);
-        s.set_access_channels(websocketpp::log::alevel::connect);
-        s.set_access_channels(websocketpp::log::alevel::disconnect);
-        s.set_access_channels(websocketpp::log::alevel::app);
+        s.set_access_channels(websocketpp::log::elevel::all);
+        s.set_access_channels(websocketpp::log::alevel::all ^ websocketpp::log::alevel::frame_payload);
  
         log.open("output.log");
         s.get_alog().set_ostream(&log);
         s.get_elog().set_ostream(&log);
-        s.register_ostream(&std::cout);
-        s.set_message_handler(bind(&on_message,&s,::_1,::_2));
+        s.register_ostream(output);
+        s.set_close_handler(std::bind(&on_close, &s, std::placeholders::_1));
+        s.set_message_handler(std::bind(&on_message,&s,std::placeholders::_1,std::placeholders::_2));
+        //s.set_write_handler(write_message);
    }
 
    ~iostream_server(){
@@ -69,20 +100,21 @@ public:
    void handle_websocket_connection(char buffer[1024]) {
         server::connection_ptr con = s.get_connection();
         con->start();
-        std::cout << "started connection" << std::endl;
-        //while(std::cin.get(buffer, 1024)) {
-        //    std::cout << "hello" << std::endl;
-        con->read_some(buffer,1024);
-        //} 
-        std::cout << "end of connection" << std::endl;
-        con->eof();
+        int len = strlen(buffer);
+        con->read_all(buffer,len);
+        std::cout << con->get_shared() << std::endl;
+        //con->eof();
+        //message_type::ptr input = manager->get_message(websocketpp::frame::opcode::TEXT,1024);
+        //std::cout << input->get_payload().c_str() << std::endl;
     }
     //void async_handle_websocket_connection(char buffer[1024]){
     //    std::async(&iostream_server::handle_websocket_connection, buffer);
     //}
+    
 private:
     server s;
     std::ofstream log;
+    con_msg_man_type::ptr manager = websocketpp::lib::make_shared<con_msg_man_type>();
 };
  
 class http_server{
@@ -91,8 +123,7 @@ public:
     int server_fd;
     int opt = 1;
     Router router = Router();
-    iostream_server s;
-    
+   
     http_server(){
         // Creating socket file descriptor
         if ((this->server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
@@ -121,11 +152,13 @@ public:
     void handle_connection(){
         int new_socket, valread;
         int addrlen = sizeof(this->address);
+        std::cout << &this->address << std::endl;
         char buffer[1024] = {0};
         if ((new_socket = accept(this->server_fd, (struct sockaddr*) &this->address, (socklen_t*) &addrlen)) < 0){
             perror("accept");
             exit(EXIT_FAILURE);
         }
+        std::cout << &this->address << std::endl;
         valread = read(new_socket, buffer, 1024);
         std::cout << buffer << std::endl;
         // check if request is websocket related
@@ -133,8 +166,7 @@ public:
         // yes then s.async_handle_websocket_connection()
         char * response = this->router.respond(buffer);
         if(response == nullptr){
-            //s.async_handle_websocket_connection(buffer);
-            s.handle_websocket_connection(buffer);
+            this->handle_websocket_connection(new_socket, buffer);
         }
         else{
             std::cout << "response found\n";
@@ -147,6 +179,23 @@ public:
         while(1){
             std::async(&http_server::handle_connection, this);
         }
+    }
+    void handle_websocket_connection(int socket, char buffer[1024]){
+        std::stringstream output;
+        iostream_server s(&output);
+        //s.async_handle_websocket_connection(buffer);
+        s.handle_websocket_connection(buffer);
+        const std::string tmp = output.str();
+        std::cout << tmp << std::endl;
+        const char* cstr = tmp.c_str();
+        output.str(std::string());
+        output.clear();
+        send(socket, cstr, strlen(cstr), 0);
+        //char abuffer[1024];
+        //int valread = read(socket, abuffer, 1024);
+        //std::cout << "info: " << valread << std::endl;
+        //std::cout << abuffer << std::endl;
+        //s.handle_websocket_connection(abuffer);
     }
 };
 
