@@ -70,10 +70,10 @@ public:
         server::connection_ptr con = s.get_connection();
         con->start();
         std::cout << "started connection" << std::endl;
-        while(std::cin.get(buffer, 1024)) {
-            std::cout << "hello" << std::endl;
-            con->read_some(buffer,1);
-        } 
+        //while(std::cin.get(buffer, 1024)) {
+        //    std::cout << "hello" << std::endl;
+        con->read_some(buffer,1024);
+        //} 
         std::cout << "end of connection" << std::endl;
         con->eof();
     }
