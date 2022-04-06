@@ -17,7 +17,7 @@ import Player from './Player';
 class Game extends React.Component {
     render() {
         // 99 - 1 = 98 / 2 = 49 
-        let numPlayers = (31 - 1)/2;
+        let numPlayers = (33 - 1)/2;
 
 
         return (
