@@ -22,7 +22,9 @@ import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import ShuffleOnIcon from '@mui/icons-material/ShuffleOn';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+import ColorMatch from './ColorMatch';
 
 import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, grey, blueGrey } from '@mui/material/colors';
 
@@ -118,6 +120,12 @@ function Puzzle(props) {
         progressBarColor = deepPurple[500];
     }
 
+    let info = {'type': 'color match', 
+                'game': { 'type': 'word', 
+                          'colors': ['Red', 'Blue'],
+                          'target': 'Red'
+                        }
+               };
 
     return (
         <Box>
@@ -132,12 +140,20 @@ function Puzzle(props) {
                     color='inherit'
                     value={count * (100/max) } />
             </Box>
+            <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
+                <ColorMatch info={info}/>
+            </Box>
+            <Box>
+                <Button variant="contained">Skip <ArrowForwardIcon /></Button>
+            </Box>
 
-            <Skeleton variant="rectangular" animation="wave" 
-                sx={{ bgcolor: '#cfd8dc' }} 
-                height={450} width={600} />
-        </Box>
+       </Box>
     );
 }
 
+/*
+            <Skeleton variant="rectangular" animation="wave" 
+                sx={{ bgcolor: '#cfd8dc' }} 
+                height={450} width={600} />
+ */
 export default Puzzle; 

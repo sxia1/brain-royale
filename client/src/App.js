@@ -23,13 +23,19 @@ function App() {
 	let location = useLocation();
 	let params = useParams();
 
+    let game_id = null;
+    if (location['pathname'].includes('join')) {
+        game_id = location['pathname'].split('/');
+        console.log(game_id);
+    }
+
 	return (
     <Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
 
-        <Typography variant="h2" component="div" sx={{ textAlign: 'center', my: 2 }}
+        <Typography variant={ location['pathname'] == "/" ? "h2" : "h4" } component="div" sx={{ textAlign: 'center', my: 3 }}
 			onClick={() => {
 			navigate("/"); }} >
-			Brain Royale
+			Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
 		</Typography>
 
         <Outlet />
