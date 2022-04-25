@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Outlet, Link } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -30,17 +32,17 @@ function App() {
     }
 
 	return (
-    <Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
+	<Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
 
-        <Typography variant={ location['pathname'] == "/" ? "h2" : "h4" } component="div" sx={{ textAlign: 'center', my: 3 }}
+		<Typography variant={ location['pathname'] == "/" ? "h2" : "h4" } component="div" sx={{ textAlign: 'center', my: 3 }}
 			onClick={() => {
 			navigate("/"); }} >
 			Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
 		</Typography>
 
-        <Outlet />
+		<Outlet />
 
-    </Container>
+	</Container>
 	);
 }
 
