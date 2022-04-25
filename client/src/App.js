@@ -43,15 +43,11 @@ function App() {
 	return (
 	<Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
 
-        <Box sx={{ my: 3, px: 7 }}>
+        <Box sx={{ my: 3, px: 7, textAlign: header["align"] }}>
             <Typography variant={ header["typography"] } 
-                className="transition duration-300"
-                component="div" 
-                sx={{ textAlign: header["align"], 
-                      ":hover": { color: '#DD2E44' }
-                }}
-                onClick={() => {
-                navigate("/"); }} >
+                className="transition duration-300" component="span" 
+                sx={{ ":hover": { color: '#DD2E44' } }}
+                onClick={() => { navigate("/"); }} >
                 Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
             </Typography>
         </Box>
