@@ -8,6 +8,7 @@
 #include <websocketpp/server.hpp>
 #include <websocketpp/config/core.hpp>
 #include <websocketpp/error.hpp>
+#include <websocketpp/extensions/permessage_deflate/disabled.hpp>
 #include <cstring>
 #include <string>
 #include <iostream>
@@ -16,7 +17,6 @@
 #include "Router.h"
 #include "static_file.h"
 #include "json.hpp"
-
 #define PORT std::stoi(getenv("PORT"))
 
 typedef websocketpp::server<websocketpp::config::core> server;
@@ -27,21 +27,42 @@ using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
+struct permessage_deflate_config {
+    typedef websocketpp::config::core::request_type request_type;
+
+    /// If the remote endpoint requests that we reset the compression
+    /// context after each message should we honor the request?
+    static const bool allow_disabling_context_takeover = true;
+
+    /// If the remote endpoint requests that we reduce the size of the
+    /// LZ77 sliding window size this is the lowest value that will be
+    /// allowed. Values range from 8 to 15. A value of 8 means we will
+    /// allow any possible window size. A value of 15 means do not allow
+    /// negotiation of the window size (ie require the default).
+    static const uint8_t minimum_outgoing_window_bits = 8;
+};
+
+typedef websocketpp::extensions::permessage_deflate::disabled <permessage_deflate_config> permessage_deflate_type;
+
 void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
     if (msg->get_opcode() == websocketpp::frame::opcode::text) {
         s->get_alog().write(websocketpp::log::alevel::app,
             "Text Message Received: "+msg->get_payload());
+        std::cout << "TEXT!!!" << std::endl;
     } else {
         s->get_alog().write(websocketpp::log::alevel::app,
             "Binary Message Received: "+websocketpp::utility::to_hex(msg->get_payload()));
+        std::cout << "BINARY!!!" << std::endl;
     }
 
     try {
         s->send(hdl, msg->get_payload(), msg->get_opcode());
+        std::cout << "SENDING!!!" << std::endl;
     } catch (websocketpp::exception const & e) {
         s->get_alog().write(websocketpp::log::alevel::app,
             std::string("Echo Failed: ")+e.what());
+        std::cout << "FAILURE!!!" << std::endl;
     }
 }
 
@@ -98,7 +119,7 @@ public:
 
    void handle_websocket_connection(char buffer[1024]) {
         int len = strlen(buffer);
-        con->read_all(buffer,len);
+        con->read_some(buffer, len);
    }
    //void async_handle_websocket_connection(char buffer[1024]){
    //    std::async(&iostream_server::handle_websocket_connection, buffer);
@@ -109,7 +130,54 @@ private:
     std::ofstream log;
     server::connection_ptr con;
 };
- 
+
+
+int GetBit(const char * data, unsigned int idx)
+{
+    unsigned int arIdx = idx / 8;
+    unsigned int biIdx = idx % 8;
+    return (data[arIdx] >> (7-biIdx)) & 1;
+}
+
+void ParseDataFrame(const char * packet)
+{
+    int FIN  = GetBit(packet, 0);
+    int RSV1 = GetBit(packet, 1);
+    int RSV2 = GetBit(packet, 2);
+    int RSV3 = GetBit(packet, 3);
+    unsigned char OPC = 0;
+    {
+        int opc0 = GetBit(packet, 4);
+        int opc1 = GetBit(packet, 5);
+        int opc2 = GetBit(packet, 6);
+        int opc3 = GetBit(packet, 7);
+        std::cout << opc0 << opc1 << opc2 << opc3 << std::endl;
+        OPC |= (opc0 << 0);
+        OPC |= (opc1 << 1);
+        OPC |= (opc2 << 2);
+        OPC |= (opc3 << 3);
+    }
+    unsigned int LEN = 0;
+    {
+        for(int i = 9; i < 16; i ++){
+            int len = GetBit(packet, i);
+            LEN |= (len << i-9);
+        }
+    }
+    int MASK = GetBit(packet, 8);
+    int MASK_KEY[32];
+    if(MASK){
+        for(int i = 16; i < 49; i ++){
+            MASK_KEY[i-16] = GetBit(packet, i);
+        }
+    }
+    std::cout << FIN << std::endl;
+    std::cout << RSV1 << RSV2 << RSV3 << std::endl;
+    std::cout << OPC << MASK << std::endl;
+    std::cout << LEN << std::endl;
+    std::cout << MASK_KEY << std::endl;
+}
+
 class http_server{
 public:
     struct sockaddr_in address;
@@ -146,15 +214,14 @@ public:
     void handle_connection(){
         int new_socket, valread;
         int addrlen = sizeof(this->address);
-        std::cout << &this->address << std::endl;
         char buffer[1024] = {0};
         if ((new_socket = accept(this->server_fd, (struct sockaddr*) &this->address, (socklen_t*) &addrlen)) < 0){
             perror("accept");
             exit(EXIT_FAILURE);
         }
-        std::cout << &this->address << std::endl;
         valread = read(new_socket, buffer, 1024);
-        std::cout << buffer << std::endl;
+        //std::cout << &this->address << std::endl;
+        //std::cout << buffer << std::endl;
         // check if request is websocket related
         // no then router.respond
         // yes then s.async_handle_websocket_connection()
@@ -175,29 +242,38 @@ public:
         }
     }
     void handle_websocket_connection(int socket, char buffer[1024]){
+        //std::cout << buffer << std::endl;
+        const std::stringstream init;
         std::stringstream output;
         iostream_server s(&output);
-        
+        //std::cout << strlen(buffer) << std::endl;
+        //ParseDataFrame(buffer);
         s.handle_websocket_connection(buffer);
         const std::string tmp = output.str();
-        std::cout << tmp << std::endl;
+        //std::cout << tmp << std::endl;
         const char* cstr = tmp.c_str();
-        output.str(std::string());
+        output.str("");
         output.clear();
+        output.copyfmt(init);
+        memset(buffer, 0, 1024);
         send(socket, cstr, strlen(cstr), 0);
         
         char abuffer[1024];
-        int valread = 0;
+        int valread = 1;
         while(valread = read(socket, abuffer, 1024) > 0){
-          std::cout << abuffer << std::endl;
-          s.handle_websocket_connection(abuffer);
-          std::cout << std::endl;
-          const std::string temp = output.str();
-          std::cout << "WSPP RESPONSE: " << temp << std::endl;
-          const char* cstr = temp.c_str();
-          output.str(std::string());
-          output.clear();
-          send(socket, cstr, strlen(cstr), 0);
+            std::cout << strlen(abuffer) << std::endl;
+            std::cout << abuffer << std::endl;
+            //ParseDataFrame(abuffer);
+            s.handle_websocket_connection(abuffer);
+            const std::string temp = output.str();
+            const char* cstr = temp.c_str();
+            std::cout << "WSPP RESPONSE: " << cstr << std::endl;
+            output.str("");
+            output.clear();
+            output.copyfmt(init);
+            memset(abuffer, 0, 1024);
+            send(socket, cstr, strlen(cstr), 0);
+            std::cout << std::endl;
         }
     }
 };
