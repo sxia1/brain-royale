@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
 
 import {
 	useParams,
@@ -31,14 +32,29 @@ function App() {
         console.log(game_id);
     }
 
+    let header = {};
+    if (location['pathname'] == "/") {
+        header = {"typography": "h2", "align": "center"};
+    }
+    else {
+        header = {"typography": "h4", "align": "left"};
+    }
+
 	return (
 	<Container maxWidth={false} sx={{ mt: 2, mb: 10, mx: 0 }}>
 
-		<Typography variant={ location['pathname'] == "/" ? "h2" : "h4" } component="div" sx={{ textAlign: 'center', my: 3 }}
-			onClick={() => {
-			navigate("/"); }} >
-			Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
-		</Typography>
+        <Box sx={{ my: 3, px: 7 }}>
+            <Typography variant={ header["typography"] } 
+                className="transition duration-300"
+                component="div" 
+                sx={{ textAlign: header["align"], 
+                      ":hover": { color: '#DD2E44' }
+                }}
+                onClick={() => {
+                navigate("/"); }} >
+                Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
+            </Typography>
+        </Box>
 
 		<Outlet />
 
