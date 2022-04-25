@@ -19,11 +19,7 @@
 
 #define PORT std::stoi(getenv("PORT"))
 
-//typedef websocketpp::server<websocketpp::config::asio> server;
 typedef websocketpp::server<websocketpp::config::core> server;
-//typedef websocketpp::config::asio::message_type::ptr message_ptr;
-typedef websocketpp::message_buffer::message<websocketpp::message_buffer::alloc::con_msg_manager> message_type;
-typedef websocketpp::message_buffer::alloc::con_msg_manager<message_type> con_msg_man_type;
 typedef server::message_ptr message_ptr;
 typedef nlohmann::json json;
 
@@ -101,22 +97,17 @@ public:
    }
 
    void handle_websocket_connection(char buffer[1024]) {
-        //read initial buffer contents
         int len = strlen(buffer);
         con->read_all(buffer,len);
-        //std::cout << con->get_shared() << std::endl;
-        //message_type::ptr input = manager->get_message(websocketpp::frame::opcode::TEXT,1024);
-        //std::cout << input->get_payload().c_str() << std::endl;
-    }
-    //void async_handle_websocket_connection(char buffer[1024]){
-    //    std::async(&iostream_server::handle_websocket_connection, buffer);
-    //}
+   }
+   //void async_handle_websocket_connection(char buffer[1024]){
+   //    std::async(&iostream_server::handle_websocket_connection, buffer);
+   //}
     
 private:
     server s;
     std::ofstream log;
     server::connection_ptr con;
-    con_msg_man_type::ptr manager = websocketpp::lib::make_shared<con_msg_man_type>();
 };
  
 class http_server{
@@ -198,8 +189,6 @@ public:
         char abuffer[1024];
         int valread = 0;
         while(valread = read(socket, abuffer, 1024) > 0){
-          //int valread = read(socket, abuffer, 1024);
-          //std::cout << "info: " << valread << std::endl;
           std::cout << abuffer << std::endl;
           s.handle_websocket_connection(abuffer);
           std::cout << std::endl;
@@ -209,7 +198,7 @@ public:
           output.str(std::string());
           output.clear();
           send(socket, cstr, strlen(cstr), 0);
-         }
+        }
     }
 };
 
