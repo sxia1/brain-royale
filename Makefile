@@ -1,5 +1,5 @@
 all: server/server.o server/static_file.o server/request.o server/Router.o
-	cd server; g++ -o server -pthread server.o static_file.o request.o Router.o
+	cd server; g++ -o server -pthread server.o static_file.o request.o Router.o -lboost_filesystem -lboost_system 
 	
 server.o: server.cpp static_file.h request.h
 	cd server; g++ -c server.cpp
