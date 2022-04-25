@@ -72,6 +72,7 @@ std::error_code write_message(websocketpp::connection_hdl hdl, char const*buffer
     return websocketpp::error::make_error_code(websocketpp::error::value::general);
 }
 */
+
 void on_close(server* s, websocketpp::connection_hdl) {
     std::cout << "Some connection closed" << std::endl;
 }
@@ -89,8 +90,10 @@ public:
         s.get_elog().set_ostream(&log);
         s.register_ostream(output);
         s.set_close_handler(std::bind(&on_close, &s, std::placeholders::_1));
-        s.set_message_handler(std::bind(&on_message,&s,std::placeholders::_1,std::placeholders::_2));
+        s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2));
         //s.set_write_handler(write_message);
+        con = s.get_connection();
+        con->start();
    }
 
    ~iostream_server(){
@@ -98,12 +101,10 @@ public:
    }
 
    void handle_websocket_connection(char buffer[1024]) {
-        server::connection_ptr con = s.get_connection();
-        con->start();
+        //read initial buffer contents
         int len = strlen(buffer);
         con->read_all(buffer,len);
-        std::cout << con->get_shared() << std::endl;
-        //con->eof();
+        //std::cout << con->get_shared() << std::endl;
         //message_type::ptr input = manager->get_message(websocketpp::frame::opcode::TEXT,1024);
         //std::cout << input->get_payload().c_str() << std::endl;
     }
@@ -114,6 +115,7 @@ public:
 private:
     server s;
     std::ofstream log;
+    server::connection_ptr con;
     con_msg_man_type::ptr manager = websocketpp::lib::make_shared<con_msg_man_type>();
 };
  
@@ -149,6 +151,7 @@ public:
             exit(EXIT_FAILURE);
         }
     }
+
     void handle_connection(){
         int new_socket, valread;
         int addrlen = sizeof(this->address);
@@ -183,7 +186,7 @@ public:
     void handle_websocket_connection(int socket, char buffer[1024]){
         std::stringstream output;
         iostream_server s(&output);
-        //s.async_handle_websocket_connection(buffer);
+        
         s.handle_websocket_connection(buffer);
         const std::string tmp = output.str();
         std::cout << tmp << std::endl;
@@ -191,11 +194,22 @@ public:
         output.str(std::string());
         output.clear();
         send(socket, cstr, strlen(cstr), 0);
-        //char abuffer[1024];
-        //int valread = read(socket, abuffer, 1024);
-        //std::cout << "info: " << valread << std::endl;
-        //std::cout << abuffer << std::endl;
-        //s.handle_websocket_connection(abuffer);
+        
+        char abuffer[1024];
+        int valread = 0;
+        while(valread = read(socket, abuffer, 1024) > 0){
+          //int valread = read(socket, abuffer, 1024);
+          //std::cout << "info: " << valread << std::endl;
+          std::cout << abuffer << std::endl;
+          s.handle_websocket_connection(abuffer);
+          std::cout << std::endl;
+          const std::string temp = output.str();
+          std::cout << "WSPP RESPONSE: " << temp << std::endl;
+          const char* cstr = temp.c_str();
+          output.str(std::string());
+          output.clear();
+          send(socket, cstr, strlen(cstr), 0);
+         }
     }
 };
 
