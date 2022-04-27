@@ -117,9 +117,13 @@ public:
         log.close();
    }
 
-   void handle_websocket_connection(char buffer[1024]) {
-        int len = strlen(buffer);
-        con->read_some(buffer, len);
+   void handle_websocket_connection(char buffer[1024], int len) {
+        // int len = strlen(buffer);
+        int alreadyread = 0;
+        while (alreadyread != len) {
+            alreadyread += con->read_some(buffer, len - alreadyread);
+            std::cout << "Total read: " << alreadyread << std::endl;
+        }
    }
    //void async_handle_websocket_connection(char buffer[1024]){
    //    std::async(&iostream_server::handle_websocket_connection, buffer);
@@ -171,11 +175,13 @@ void ParseDataFrame(const char * packet)
             MASK_KEY[i-16] = GetBit(packet, i);
         }
     }
-    std::cout << FIN << std::endl;
-    std::cout << RSV1 << RSV2 << RSV3 << std::endl;
-    std::cout << OPC << MASK << std::endl;
-    std::cout << LEN << std::endl;
-    std::cout << MASK_KEY << std::endl;
+    std::cout << "DATA FRAME" << std::endl;
+    std::cout << "FIN: " << FIN << std::endl;
+    std::cout << "RSV: " << RSV1 << RSV2 << RSV3 << std::endl;
+    std::cout << "OPCODE: " << OPC << MASK << std::endl;
+    std::cout << "LENGTH: " << LEN << std::endl;
+    std::cout << "MASK: " << MASK_KEY << std::endl;
+    std::cout << "DATA FRAME END" << std::endl;
 }
 
 class http_server{
@@ -248,7 +254,7 @@ public:
         iostream_server s(&output);
         //std::cout << strlen(buffer) << std::endl;
         //ParseDataFrame(buffer);
-        s.handle_websocket_connection(buffer);
+        s.handle_websocket_connection(buffer, strlen(buffer));
         const std::string tmp = output.str();
         //std::cout << tmp << std::endl;
         const char* cstr = tmp.c_str();
@@ -259,22 +265,24 @@ public:
         send(socket, cstr, strlen(cstr), 0);
         
         char abuffer[1024];
-        int valread = 1;
-        while(valread = read(socket, abuffer, 1024) > 0){
-            std::cout << strlen(abuffer) << std::endl;
+        int valread;
+        do {
+            valread = read(socket, abuffer, 1024);
+            std::cout << valread << std::endl;
             std::cout << abuffer << std::endl;
-            //ParseDataFrame(abuffer);
-            s.handle_websocket_connection(abuffer);
+            ParseDataFrame(abuffer);
+            s.handle_websocket_connection(abuffer, valread);
             const std::string temp = output.str();
             const char* cstr = temp.c_str();
-            std::cout << "WSPP RESPONSE: " << cstr << std::endl;
+            std::cout << "WSPP RESPONSE: " << std::endl << cstr << std::endl;
             output.str("");
             output.clear();
             output.copyfmt(init);
             memset(abuffer, 0, 1024);
-            send(socket, cstr, strlen(cstr), 0);
+            send(socket, cstr, temp.length(), 0);
             std::cout << std::endl;
         }
+        while(valread > 0);
     }
 };
 
