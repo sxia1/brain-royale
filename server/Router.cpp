@@ -135,7 +135,7 @@ char* Router::respond(char* req){
             "Content-type: text/html\r\n"
             "\r\n";
 */ 
-            if (r.isUpgrade()){
+            if (r.isUpgrade() || (r.getType() != "GET" && r.getType() != "POST")){
                 std::cout << "websocket\n";
                 return nullptr;
             }

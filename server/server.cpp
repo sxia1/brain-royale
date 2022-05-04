@@ -122,7 +122,7 @@ public:
         int alreadyread = 0;
         while (alreadyread != len) {
             alreadyread += con->read_some(buffer, len - alreadyread);
-            std::cout << "Total read: " << alreadyread << std::endl;
+            std::cout << "Total read: " << alreadyread << "/" << len << std::endl;
         }
    }
    //void async_handle_websocket_connection(char buffer[1024]){
@@ -190,6 +190,9 @@ public:
     int server_fd;
     int opt = 1;
     Router router = Router();
+    std::stringstream wppoutput;
+    iostream_server wppserver{&wppoutput};
+    std::vector<std::future<void>> websocketfutures;
    
     http_server(){
         // Creating socket file descriptor
@@ -231,12 +234,15 @@ public:
         // check if request is websocket related
         // no then router.respond
         // yes then s.async_handle_websocket_connection()
+        std::cout << buffer << std::endl;
         char * response = this->router.respond(buffer);
         if(response == nullptr){
-            this->handle_websocket_connection(new_socket, buffer);
+            websocketfutures.push_back(std::async(&http_server::handle_websocket_connection, this, new_socket, buffer));
+            // close(new_socket);
         }
         else{
             std::cout << "response found\n";
+            // std::cout << response << std::endl;
             send(new_socket, response, strlen(response), 0);
             printf("Hello message sent\n");
             close(new_socket);
@@ -244,42 +250,42 @@ public:
     }
     void async_handle_connection(){
         while(1){
+            std::cout << "HANDLING" << std::endl;
             std::async(&http_server::handle_connection, this);
         }
     }
-    void handle_websocket_connection(int socket, char buffer[1024]){
+    void handle_websocket_connection(int socketnum, char buffer[1024]){
         //std::cout << buffer << std::endl;
         const std::stringstream init;
-        std::stringstream output;
-        iostream_server s(&output);
+        // std::stringstream output;
+        // iostream_server s(&output);
         //std::cout << strlen(buffer) << std::endl;
         //ParseDataFrame(buffer);
-        s.handle_websocket_connection(buffer, strlen(buffer));
-        const std::string tmp = output.str();
+        this->wppserver.handle_websocket_connection(buffer, strlen(buffer));
+        const std::string tmp = this->wppoutput.str();
         //std::cout << tmp << std::endl;
         const char* cstr = tmp.c_str();
-        output.str("");
-        output.clear();
-        output.copyfmt(init);
+        this->wppoutput.str("");
+        this->wppoutput.clear();
+        this->wppoutput.copyfmt(init);
         memset(buffer, 0, 1024);
-        send(socket, cstr, strlen(cstr), 0);
+        send(socketnum, cstr, strlen(cstr), 0);
         
         char abuffer[1024];
         int valread;
         do {
-            valread = read(socket, abuffer, 1024);
-            std::cout << valread << std::endl;
-            std::cout << abuffer << std::endl;
+            valread = read(socketnum, abuffer, 1024);
+            if (valread <= 0) {continue;}
             ParseDataFrame(abuffer);
-            s.handle_websocket_connection(abuffer, valread);
-            const std::string temp = output.str();
+            this->wppserver.handle_websocket_connection(abuffer, valread);
+            const std::string temp = this->wppoutput.str();
             const char* cstr = temp.c_str();
             std::cout << "WSPP RESPONSE: " << std::endl << cstr << std::endl;
-            output.str("");
-            output.clear();
-            output.copyfmt(init);
+            this->wppoutput.str("");
+            this->wppoutput.clear();
+            this->wppoutput.copyfmt(init);
             memset(abuffer, 0, 1024);
-            send(socket, cstr, temp.length(), 0);
+            send(socketnum, cstr, temp.length(), 0);
             std::cout << std::endl;
         }
         while(valread > 0);
