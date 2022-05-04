@@ -107,41 +107,44 @@ char* Router::respond(char* req){
     */
    
     printf("target: %s\n",target.c_str());
-    int slash = target.find_last_of('/');
-    if (target.compare("/static/css/main.26bfa704.css")==0){
-/*        const char *cssfile = readFiletoBuffer(CSS);
-        char css[strlen(cssfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: text/css\r\n"
-            "\r\n";
-            */
-           std::cout << "css\n";
-        return css;
+    int dot = target.find_last_of('.');
+//    std::cout << dot << "\n";
+    if (dot != -1){
+        std::string ext = target.substr(dot);
+    //    std::cout << ext << "\n";
+        if (ext.compare(".css")==0){
+    /*        const char *cssfile = readFiletoBuffer(CSS);
+            char css[strlen(cssfile)+128] = "HTTP/1.1 200 OK\r\n"
+                "Connection: close\r\n"
+                "Content-type: text/css\r\n"
+                "\r\n";
+                */
+            std::cout << "css\n";
+            return css;
+        }
+        else if (ext.compare(".js")==0){
+    /*        const char *jsfile = readFiletoBuffer(JS);
+            char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
+                "Connection: close\r\n"
+                "Content-type: application/javascript; charset=utf-8\r\n"
+                "\r\n";*/
+            std::cout << "js\n";
+            return js;
+        }
     }
-    else if (target.compare("/static/js/main.179a5f96.js")==0){
-/*        const char *jsfile = readFiletoBuffer(JS);
-        char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: application/javascript; charset=utf-8\r\n"
-            "\r\n";*/
-           std::cout << "js\n";
-        return js;
-    }
-    else {
 /* 
-        const char *indexfile = readFiletoBuffer(INDEX);
-        char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: text/html\r\n"
-            "\r\n";
+    const char *indexfile = readFiletoBuffer(INDEX);
+    char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
+        "Connection: close\r\n"
+        "Content-type: text/html\r\n"
+        "\r\n";
 */ 
-            if (r.isUpgrade()){
-                std::cout << "websocket\n";
-                return nullptr;
-            }
-            std::cout << "homepage hello\n";
-        return hello;
-    }
-    
+        if (r.isUpgrade()){
+            std::cout << "websocket\n";
+            return nullptr;
+        }
+        std::cout << "homepage hello\n";
+    return hello;
+
 }
 
