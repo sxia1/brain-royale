@@ -15,9 +15,6 @@ namespace fs = boost::filesystem;
 #define JSPATH "../client/build/static/js/"
 
 Router::Router(){
-    //DEFAULT CASES JUST IN CASE
-//    std::string CSS = "../client/build/static/css/main.26bfa704.css";
-//    std::string JS = "../client/build/static/js/main.179a5f96.js";
     std::string CSS;
     std::string JS;
     fs::path p(CSSPATH);
@@ -95,53 +92,27 @@ Router::~Router(){
 char* Router::respond(char* req){
     request r = request(req);
     std::string target = r.getTarget();
-    /*
-    if (target.compare("/")==0){
-        const char *indexfile = readFiletoBuffer(INDEX);
-        char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: text/html\r\n"
-            "\r\n";
-        return strcat(hello, indexfile);
-    }
-    */
-   
+
     printf("target: %s\n",target.c_str());
-    int slash = target.find_last_of('/');
-    if (target.compare("/static/css/main.26bfa704.css")==0){
-/*        const char *cssfile = readFiletoBuffer(CSS);
-        char css[strlen(cssfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: text/css\r\n"
-            "\r\n";
-            */
-           std::cout << "css\n";
-        return css;
+    int dot = target.find_last_of('.');
+    if (dot != -1){
+        std::string ext = target.substr(dot);
+        if (ext.compare(".css")==0){
+            std::cout << "css\n";
+            return css;
+        }
+        else if (ext.compare(".js")==0){
+            std::cout << "js\n";
+            return js;
+        }
     }
-    else if (target.compare("/static/js/main.179a5f96.js")==0){
-/*        const char *jsfile = readFiletoBuffer(JS);
-        char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: application/javascript; charset=utf-8\r\n"
-            "\r\n";*/
-           std::cout << "js\n";
-        return js;
+
+    if (r.isUpgrade() || (r.getType() != "GET" && r.getType() != "POST")){
+        std::cout << "websocket\n";
+        return nullptr;
     }
-    else {
-/* 
-        const char *indexfile = readFiletoBuffer(INDEX);
-        char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
-            "Connection: close\r\n"
-            "Content-type: text/html\r\n"
-            "\r\n";
-*/ 
-            if (r.isUpgrade() || (r.getType() != "GET" && r.getType() != "POST")){
-                std::cout << "websocket\n";
-                return nullptr;
-            }
-            std::cout << "homepage hello\n";
-        return hello;
-    }
+    std::cout << "homepage hello\n";
+    return hello;
     
 }
 
