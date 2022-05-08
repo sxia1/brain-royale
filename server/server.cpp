@@ -72,6 +72,7 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
     std::string responseType = message["type"];
+
     if (responseType == "connected") {
         json response = R"({
             "type" : "connect",
@@ -79,6 +80,24 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
         })"_json;
         s->send(hdl, response.dump(), msg->get_opcode());
     }
+
+    else if(responseType == "joinLobby"){
+        1;
+    }
+
+    else if(responseType == "completePuzzle"){
+        1;
+    }
+
+
+    else if(responseType == "skipPuzzle"){
+        1;
+    }
+
+    else if(responseType == "changeAttackStyle"){
+        1;
+    }
+
     // s->close(hdl,websocketpp::close::status::normal,"");
 }
 

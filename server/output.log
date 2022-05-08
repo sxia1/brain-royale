@@ -1,0 +1,18 @@
+[2022-05-04 00:17:23] [connect] WebSocket Connection iostream transport v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0" / 101
+[2022-05-04 00:17:23] [application] Text Message Received: {"type":"connected","data":"Howdy"}
+[2022-05-04 00:17:23] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 35 payload bytes
+[2022-05-04 00:17:23] [frame_header] Header Bytes: 
+[0] (2) 81 23 
+
+[2022-05-04 00:17:23] [frame_payload] Payload Bytes: 
+[0] (35) [1] {"type":"connected","data":"Howdy"}
+
+[2022-05-04 00:17:23] [error] consume error: websocketpp.processor:9 (Invalid use of reserved bits)
+[2022-05-04 00:17:23] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 30 payload bytes
+[2022-05-04 00:17:23] [frame_header] Header Bytes: 
+[0] (2) 88 1E 
+
+[2022-05-04 00:17:23] [frame_payload] Payload Bytes: 
+[0] (30) [8] 03 EA 49 6E 76 61 6C 69 64 20 75 73 65 20 6F 66 20 72 65 73 65 72 76 65 64 20 62 69 74 73 
+
+[2022-05-04 00:17:23] [disconnect] Disconnect close local:[1002,Invalid use of reserved bits] remote:[1006]
