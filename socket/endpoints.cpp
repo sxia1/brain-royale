@@ -37,7 +37,7 @@ void to_json(json& j, const Player_Stats& player_info){
     j["incorrect_solutions"] = player_info.incorrect_solutions;
     j["total_attacks"] = player_info.total_attacks;
     j["total_times_attacked"] = player_info.total_times_attacked;
-    j[""]
+    j["left_game"] = player_info.left_game;
 }
 
 
@@ -107,7 +107,5 @@ class Lobby {
         void verify_puzzle_solution(){
             1;
         }
-
-    private:
 
 }
