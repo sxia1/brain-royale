@@ -53,20 +53,15 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         })"_json;
         s->send(hdl, response.dump(), msg->get_opcode());
     }
-
     else if(responseType == "joinLobby"){
         1;
     }
-
     else if(responseType == "completePuzzle"){
         1;
     }
-
-
     else if(responseType == "skipPuzzle"){
         1;
     }
-
     else if(responseType == "changeAttackStyle"){
         1;
     }

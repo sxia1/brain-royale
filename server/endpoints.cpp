@@ -15,7 +15,7 @@
 #include <functional>
 #include "Router.h"
 #include "static_file.h"
-#include <vectors>
+#include <vector>
 #include "json.hpp"
 
 typedef nlohmann::json json;
@@ -28,7 +28,7 @@ struct Player_Stats {
     int total_attacks;
     int total_times_attacked;
     bool left_game;
-}
+};
 
 void to_json(json& j, const Player_Stats& player_info){
     j["score"] = player_info.score;
@@ -38,13 +38,12 @@ void to_json(json& j, const Player_Stats& player_info){
     j["total_attacks"] = player_info.total_attacks;
     j["total_times_attacked"] = player_info.total_times_attacked;
     j["left_game"] = player_info.left_game;
-}
-
+};
 
 
 class Lobby {
     public:
-        static int lobby_id
+        static int lobby_id;
         int size; 
         std::vector<Player_Stats> player_list;
         bool is_private;
@@ -52,14 +51,14 @@ class Lobby {
         int total_puzzles;
         
 
-        Lobby(const bool is_private, const & vector<Players> player_list){
+        Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
             this->lobby_id++;
             this->is_private = is_private;
             this->player_list = player_list;
         }
 
         
-        bool add_player(const & Player player){
+        bool add_player(const Player_Stats & player){
             if(this->player_list.size() == 99){
                 return false;
             }
@@ -68,7 +67,7 @@ class Lobby {
             return true; 
         }
 
-        void deactivate_player(const & int player_id){
+        void deactivate_player(const int player_id){
             this->player_list[player_id].left_game = true;
         }
 
@@ -108,4 +107,4 @@ class Lobby {
             1;
         }
 
-}
+};
