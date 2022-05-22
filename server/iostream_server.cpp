@@ -2,7 +2,7 @@
 #include <websocketpp/server.hpp>
 #include <websocketpp/config/core.hpp>
 #include <iostream>
-#include "json.hpp"
+//#include "json.hpp"
 #include "LobbyController.h"
 
 typedef websocketpp::server<websocketpp::config::core> server;
@@ -14,7 +14,7 @@ using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
 
-void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
+void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg, LobbyController* lcontrol) {
     std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
     if (msg->get_opcode() == websocketpp::frame::opcode::text) {
         s->get_alog().write(websocketpp::log::alevel::app,
@@ -41,8 +41,12 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "type" : "connect",
             "data" : null
         })"_json;
+        std::cout << msg->get_opcode();
         s->send(hdl, response.dump(), msg->get_opcode());
+        lcontrol->getList()[0]->sendall();
+        
     }
+    
 /*    else if(responseType == "joinLobby"){
         if(lobbies.size() == 0){
             std::vector<Player_Stats> players = {};
@@ -79,10 +83,10 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 
 }
 
-void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol){
+void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol,std::stringstream *output){
     std::cout << "in open\n";
  //   lcontrol.debug();
-    lcontrol->add(socketnum, hdl);
+    lcontrol->add(socketnum, &hdl, s, output);
     
 }
 
@@ -104,10 +108,10 @@ iostream_server::iostream_server(std::stringstream *output, int socketnum, Lobby
         s.get_elog().set_ostream(&log);
         s.register_ostream(output);
         std::cout << "before open\n";
-        s.set_open_handler(std::bind(&on_open, &s, std::placeholders::_1, socketnum, lcontrol));
+        s.set_open_handler(std::bind(&on_open, &s, std::placeholders::_1, socketnum, lcontrol, output));
         std::cout << "after open\n";
         s.set_close_handler(std::bind(&on_close, &s, std::placeholders::_1));
-        s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2));
+        s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2,lcontrol));
         con = s.get_connection();
         con->start();
 }

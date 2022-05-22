@@ -1,10 +1,12 @@
 #pragma once
-#include "LobbyController.h"
 #include <websocketpp/server.hpp>
 #include <websocketpp/config/core.hpp>
 #include <fstream>
+#include "LobbyController.h"
 
 typedef websocketpp::server<websocketpp::config::core> server;
+
+class LobbyController;
 
 class iostream_server {
 public:

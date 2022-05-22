@@ -116,11 +116,11 @@ public:
             const std::string temp = wppoutput.str();
             const char* cstr = temp.c_str();
             std::cout << "WSPP RESPONSE: " << std::endl << cstr << std::endl;
+            memset(abuffer, 0, 1024);
+            send(socketnum, cstr, temp.length(), 0);
             wppoutput.str("");
             wppoutput.clear();
             wppoutput.copyfmt(init);
-            memset(abuffer, 0, 1024);
-            send(socketnum, cstr, temp.length(), 0);
             std::cout << std::endl;
         }
         while(valread > 0);

@@ -1,22 +1,31 @@
 #include "Lobby.h"
 #include <websocketpp/server.hpp>
+#include <websocketpp/config/core.hpp>
+
+#include "json.hpp"
 #define MAX_SIZE 30
+
+typedef websocketpp::server<websocketpp::config::core> server;
+
+typedef nlohmann::json json;
 
 Lobby::Lobby(){
     std::unordered_map< int, websocketpp::connection_hdl* > lobby;
 }
-
+/*
 Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
     std::unordered_map< int, websocketpp::connection_hdl* > lobby;
-    this->lobby_id++;
+    //this->lobby_id++;
     this->is_private = is_private;
     this->player_list = player_list;
 }
-
-void Lobby::add(int id, websocketpp::connection_hdl* hdl){
+*/
+void Lobby::add(int id, websocketpp::connection_hdl* hdl, server* s,std::stringstream *output){
     lobby[id] = hdl;
+    this->s = s;
+    this->output = output;
 }
-
+/*
 bool Lobby::add_player(const Player_Stats & player){
     if(this->player_list.size() == 99){
         return false;
@@ -67,7 +76,19 @@ void Lobby::verify_puzzle_solution(){
 int Lobby::size(){
     return lobby.size();
 }
-
-void sendall(){
-    
+*/
+void Lobby::sendall(){
+    json response = R"({
+        "type" : "text",
+        "data" : "hello!"
+    })"_json;
+   std::cout << "before sendall()\n";
+   for (auto i : lobby){
+       std::cout << "socket id: " << i.first << "\n";
+       *(i.second);
+       std::cout << "second worked\n";
+       std::cout << "opcode: " << websocketpp::frame::opcode::text << "\n";
+        s->send(*(i.second), response.dump(),websocketpp::frame::opcode::text);
+        break;
+    }
 }

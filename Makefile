@@ -16,10 +16,10 @@ request.o: request.cpp request.h
 Router.o: Router.cpp Router.h static_file.h request.h
 	cd server; g++ -c Router.cpp
 
-LobbyController.o: LobbyController.cpp LobbyController.h Lobby.h
+LobbyController.o: LobbyController.cpp LobbyController.h Lobby.h iostream_server.h
 	cd server; g++ -c LobbyController.cpp
 
-Lobby.o: Lobby.cpp Lobby.h
+Lobby.o: Lobby.cpp Lobby.h iostream_server.h
 	cd server; g++ -c Lobby.cpp
 
 run:
