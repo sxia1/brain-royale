@@ -134,7 +134,7 @@ function Puzzle(props) {
                     value={count * (100/max) } />
             </Box>
             <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
-                <ColorMatch/>
+                <ColorMatch onChange={this.setPuzzle}/>
             </Box>
             <Box>
                 <Button variant="contained">Skip <ArrowForwardIcon /></Button>
