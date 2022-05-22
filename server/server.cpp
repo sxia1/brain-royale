@@ -13,6 +13,7 @@
 #include <functional>
 #include "Router.h"
 #include "static_file.h"
+#include "endpoints.cpp"
 #include "json.hpp"
 #define PORT std::stoi(getenv("PORT"))
 
@@ -23,6 +24,8 @@ typedef nlohmann::json json;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
+
+std::vector<Lobby> lobbies;
 
 void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
@@ -45,7 +48,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
     std::string responseType = message["type"];
-
+    
     if (responseType == "connected") {
         json response = R"({
             "type" : "connect",
@@ -54,7 +57,24 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         s->send(hdl, response.dump(), msg->get_opcode());
     }
     else if(responseType == "joinLobby"){
-        1;
+        if(lobbies.size() == 0){
+            std::vector<Player_Stats> players = {};
+            Lobby current = Lobby(false, players);
+            lobbies.push_back(current);
+
+            json response;
+            response["lobby_id"] = 1;
+
+            s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
+
+        }
+        // Lobby()
+        // if(message.contains("data")){
+            // if(!typeid(message["data"]).name() == 'i'){
+            //     1;
+            // }
+            // std::string data = message["data"];
+        // }
     }
     else if(responseType == "completePuzzle"){
         1;

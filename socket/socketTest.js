@@ -12,6 +12,8 @@ socket.addEventListener('message', function (event) {
 });
 
 var sendSomething = function(data) {
-    var newEvent = {type: 'arbitrary', data: data};
-    socket.send(JSON.stringify(newEvent));
+    // var newEvent = {type: 'arbitrary', data: data};
+    socket.send(JSON.stringify(data));
 }
+
+// var request = {"type": "joinLobby", "data": "test"}

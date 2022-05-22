@@ -49,6 +49,7 @@ class Lobby {
         bool is_private;
         int time_left; 
         int total_puzzles;
+        // bool started = false;
         
 
         Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
@@ -106,5 +107,4 @@ class Lobby {
         void verify_puzzle_solution(){
             1;
         }
-
 };
