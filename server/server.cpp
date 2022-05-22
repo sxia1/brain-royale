@@ -12,8 +12,9 @@
 #include <future>
 #include <functional>
 #include "Router.h"
+#include "LobbyController.h"
 #include "static_file.h"
-#include "endpoints.cpp"
+//#include "endpoints.cpp"
 #include "json.hpp"
 #define PORT std::stoi(getenv("PORT"))
 
@@ -56,7 +57,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         })"_json;
         s->send(hdl, response.dump(), msg->get_opcode());
     }
-    else if(responseType == "joinLobby"){
+/*    else if(responseType == "joinLobby"){
         if(lobbies.size() == 0){
             std::vector<Player_Stats> players = {};
             Lobby current = Lobby(false, players);
@@ -68,6 +69,8 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
 
         }
+
+      
         // Lobby()
         // if(message.contains("data")){
             // if(!typeid(message["data"]).name() == 'i'){
@@ -76,6 +79,8 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             // std::string data = message["data"];
         // }
     }
+*/
+
     else if(responseType == "completePuzzle"){
         1;
     }
@@ -88,14 +93,20 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 
 }
 
+void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController& lcontrol){
+//    lcontrol.debug();
+    lcontrol.add(socketnum, hdl);
+}
+
 void on_close(server* s, websocketpp::connection_hdl) {
     std::cout << "Some connection closed" << std::endl;
 }
 
 class iostream_server {
 public:
-    iostream_server(std::stringstream *output) {
+    iostream_server(std::stringstream *output, int socketnum, LobbyController &lcontrol) {
         // Set logging settings
+        std::cout << "in iostream constructor\n";
         s.clear_access_channels(websocketpp::log::alevel::all);
         s.set_access_channels(websocketpp::log::elevel::all);
         s.set_access_channels(websocketpp::log::alevel::all ^ websocketpp::log::alevel::frame_payload);
@@ -104,6 +115,9 @@ public:
         s.get_alog().set_ostream(&log);
         s.get_elog().set_ostream(&log);
         s.register_ostream(output);
+        std::cout << "before open\n";
+        s.set_open_handler(std::bind(&on_open, &s, std::placeholders::_1, socketnum, lcontrol));
+        std::cout << "after open\n";
         s.set_close_handler(std::bind(&on_close, &s, std::placeholders::_1));
         s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2));
         con = s.get_connection();
@@ -126,6 +140,7 @@ private:
     server s;
     std::ofstream log;
     server::connection_ptr con;
+    websocketpp::connection_hdl hdl;
 };
 
 class http_server{
@@ -134,6 +149,7 @@ public:
     int server_fd;
     int opt = 1;
     Router router = Router();
+    LobbyController lcontrol = new LobbyController();
     //IMPLEMENT AS MAP<SOCKET: FUTURE> INSTEAD OF VECTOR
     std::vector<std::future<void>> websocketfutures;
    
@@ -189,9 +205,12 @@ public:
         }
     }
     void handle_websocket_connection(int socketnum, char buffer[1024]){
+        std::cout << "websocket conn\n";
         const std::stringstream init;
         std::stringstream wppoutput;
-        iostream_server wppserver{&wppoutput};
+        std::cout << "before iostream\n";
+        iostream_server wppserver{&wppoutput, socketnum, lcontrol};
+        std::cout << "breakpoint iostream done\n"; //===============================================================
         wppserver.handle_websocket_connection(buffer, strlen(buffer));
         const std::string tmp = wppoutput.str();
         const char* cstr = tmp.c_str();
