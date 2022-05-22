@@ -15,4 +15,6 @@ int Lobby::size(){
     return lobby.size();
 }
 
-void sendall();
+void sendall(){
+    
+}
