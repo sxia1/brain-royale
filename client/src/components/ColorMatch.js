@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import Box from '@mui/material/Box';
@@ -9,40 +10,52 @@ import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, gre
 
 //to use: <ColorMatch handler={handleSolve}>
 function ColorMatch(props){
-    //const [solved, setSolved] = React.useState(-1); //-1: not acted, 0: incorrect, 1: correct
-    // const colors = ["error", "warning", "success", "primary", "secondary"];
     const colors = [red[500], orange[500], yellow[600], green[500], blue[500], purple[500]];
     const words = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
-    const types = ["Word", "Color"];
-    const game = props['info']['game']
-    let type = Math.floor(Math.random()*2);
+    const types = ["word", "color"];
 
-    console.log(props['info'])
+    const [currentColorMatch, updateColorMatch] = useState({"colorIndexA": Math.floor(Math.random() * colors.length), 
+    "colorIndexB": Math.floor(Math.random() * colors.length),
+    "wordIndexA": Math.floor(Math.random() * colors.length),
+    "wordIndexB": Math.floor(Math.random() * colors.length),
+    "type": ["word", "color"][Math.floor(Math.random()*2)],
+    "pos": Math.floor(Math.random()*2),
+    "solved": false
+});
+    let colorIndexA = currentColorMatch["colorIndexA"];
+    let colorIndexB = currentColorMatch["colorIndexB"];
+    let wordIndexA = currentColorMatch["wordIndexA"];
+    let wordIndexB = currentColorMatch["wordIndexB"];
+    let type = currentColorMatch["type"];
+    let pos = currentColorMatch["pos"];
 
-    let colorA = words.indexOf(game['colors'][0]); // Math.floor(Math.random()*6);
-    let colorB = words.indexOf(game['colors'][1]); // Math.floor(Math.random()*5);
-    /*
-    if(colorB >= colorA){
-      colorB ++;
+    let targetName = words[wordIndexA];
+    //testing
+    type = "word";
+
+    while (wordIndexA == wordIndexB) {
+        wordIndexB = (wordIndexB + 2) % colors.length;
     }
-    */
-    let targetWords = [words[colorA], words[colorB]];
-    let targetColors = [colors[colorA], colors[colorB]];
 
-    let target = game['target']; 
-    //<div>{ JSON.stringify(props['info']) }</div>
+    if (pos) {
+        let temp = wordIndexA;
+        wordIndexA = wordIndexB;
+        wordIndexB = temp;
+    }
+  
 
     return (
       <div>
-          <Typography variant="h6" sx={{ mb: 2 }}>Choose { game['type'] } { target }</Typography>
+          <Typography variant="h6" sx={{ mb: 2 }}>Choose the { type }: { targetName }</Typography>
 
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-              <Box sx={{ backgroundColor: colors[colorA], color: '#ffffff',  width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
-                  <Typography variant="h5">{words[colorB]}</Typography>
+              <Box onClick={() => updateColorMatch({"colorIndexA": colorIndexA, "colorIndexB": colorIndexB, "wordIndexA": wordIndexA, "wordIndexB": wordIndexB, "type": type, "pos": 0, "solved": false})}
+              sx={{ backgroundColor: colors[colorIndexA], color: '#ffffff',  width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
+                  <Typography variant="h5">{words[wordIndexA]}</Typography>
               </Box>
 
-              <Box sx={{ backgroundColor: colors[colorB], color: '#ffffff', width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
-                  <Typography variant="h5">{words[colorA]}</Typography>
+              <Box sx={{ backgroundColor: colors[colorIndexB], color: '#ffffff', width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
+                  <Typography variant="h5">{words[wordIndexB]}</Typography>
               </Box>
           </Box>
       </div>

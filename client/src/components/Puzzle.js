@@ -30,7 +30,7 @@ import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, gre
 
 
 function PuzzleCounter(props) {
-    const [countPuzzles, setCountPuzzles] = React.useState(0);
+    const [countPuzzles, setCountPuzzles] = React.useState(10);
     const [countSent, setCountSent] = React.useState(0);
     const [maxPuzzles, setMaxPuzzles] = React.useState(20);
 
@@ -120,13 +120,6 @@ function Puzzle(props) {
         progressBarColor = deepPurple[500];
     }
 
-    let info = {'type': 'color match', 
-                'game': { 'type': 'word', 
-                          'colors': ['Red', 'Blue'],
-                          'target': 'Red'
-                        }
-               };
-
     return (
         <Box>
             <PuzzleTimer count={count} max={max} />
@@ -141,7 +134,7 @@ function Puzzle(props) {
                     value={count * (100/max) } />
             </Box>
             <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
-                <ColorMatch info={info}/>
+                <ColorMatch/>
             </Box>
             <Box>
                 <Button variant="contained">Skip <ArrowForwardIcon /></Button>
