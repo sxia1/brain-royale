@@ -46,7 +46,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
     }
 
     json message = json::parse(msg->get_payload());
-    std::cout << message << std::endl;
+    std::cout << msg->get_payload() << std::endl;
     std::string responseType = message["type"];
     
     if (responseType == "connected") {
@@ -57,24 +57,17 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         s->send(hdl, response.dump(), msg->get_opcode());
     }
     else if(responseType == "joinLobby"){
-        if(lobbies.size() == 0){
-            std::vector<Player_Stats> players = {};
-            Lobby current = Lobby(false, players);
-            lobbies.push_back(current);
 
-            json response;
-            response["lobby_id"] = 1;
+        std::vector<Player_Stats> players = {};
+        Lobby current = Lobby(message["data"], false, players);
+        lobbies.push_back(current);
 
-            s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
+        json response;
+        response["lobby_id"] = message["data"];
 
-        }
-        // Lobby()
-        // if(message.contains("data")){
-            // if(!typeid(message["data"]).name() == 'i'){
-            //     1;
-            // }
-            // std::string data = message["data"];
-        // }
+        s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
+
+
     }
     else if(responseType == "completePuzzle"){
         1;

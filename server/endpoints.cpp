@@ -43,17 +43,18 @@ void to_json(json& j, const Player_Stats& player_info){
 
 class Lobby {
     public:
-        static int lobby_id;
+        // static int lobby_id;
         int size; 
         std::vector<Player_Stats> player_list;
         bool is_private;
         int time_left; 
         int total_puzzles;
+        std::string lobby_id;
         // bool started = false;
         
 
-        Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
-            this->lobby_id++;
+        Lobby(const std::string lobby_id, const bool is_private, const std::vector<Player_Stats> & player_list){
+            this->lobby_id = lobby_id;
             this->is_private = is_private;
             this->player_list = player_list;
         }
