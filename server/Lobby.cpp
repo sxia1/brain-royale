@@ -9,7 +9,6 @@ Lobby::Lobby(){
 
 void Lobby::add(int id, websocketpp::connection_hdl* hdl){
     lobby[id] = hdl;
-    send(id, "added", 5, 0);
 }
 
 int Lobby::size(){
