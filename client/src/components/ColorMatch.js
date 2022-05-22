@@ -15,6 +15,7 @@ class ColorMatch extends React.Component{
     }
 
     render() {
+        //console.log("I'm here and this is props:", this.props);
         return (
             <div>
                 <Typography variant="h6" sx={{ mb: 2 }}>Choose the { this.props.info.puzzle_type }: { this.props.info.correct_word }</Typography>
