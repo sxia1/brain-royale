@@ -128,27 +128,20 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         }
    }
 
-/*
-      
-        // Lobby()
-        // if(message.contains("data")){
-            // if(!typeid(message["data"]).name() == 'i'){
-            //     1;
-            // }
-            // std::string data = message["data"];
-        // }
-    }
-*/
+    else if(responseType == "attack"){
+       std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+        bool found = false;
 
-    else if(responseType == "completePuzzle"){
-        1;
-    }
-    else if(responseType == "skipPuzzle"){
-        1;
-    }
-    else if(responseType == "changeAttackStyle"){
-        1;
-    }
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                json response = lobby->attack(socketnum);
+                s->send(hdl, response.dump(), msg->get_opcode());
+                found = true;
+                break;
+            }
+        }
+   }
 
 }
 

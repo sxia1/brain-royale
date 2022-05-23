@@ -129,6 +129,9 @@ json Lobby::verify_puzzle_solution(int socketnum, std::string user_solution){
 
     if(user_solution == solution){
         player_list[socketnum].correct_solutions +=1;
+        if(player_list[socketnum].correct_solutions%5 == 1){
+            player_list[socketnum].attacks_left += 1;
+        }
     }
     else{
         player_list[socketnum].incorrect_solutions += 1;
@@ -147,7 +150,18 @@ int Lobby::size(){
     return lobby.size();
 }
 
-void Lobby::attack(){
+json Lobby::attack(int socketnum){
+    if(player_list[socketnum].attacks_left == 0){
+        json attacker_response = {
+            {"type", "attack"},
+            {"message", "no attacks left, solve more puzzles"}
+        };
+        
+        return attacker_response;
+    }
+
+    player_list[socketnum].total_attacks += 1;
+
     json response = R"({
     "type" : "attack",
     "data" : "you've been attacked!"
@@ -155,11 +169,19 @@ void Lobby::attack(){
     
     auto it = std::next(lobby.begin(), rand() % lobby.size());
     auto i = (*it);
+    player_list[i.first].total_times_attacked += 1;
+
     try {
         s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
     }catch (...){
         std::cerr << "attack target not found\n";
     }
+
+    json attacker_response = {
+        {"type", "attack"},
+        {"message", "attack successful"}
+    };
+    return attacker_response;
 }
 
 void Lobby::sendall(json message){

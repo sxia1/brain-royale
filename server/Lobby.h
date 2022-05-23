@@ -17,7 +17,9 @@ struct Player_Stats {
     int incorrect_solutions = 0;
     int total_attacks = 0;
     int total_times_attacked = 0;
+    int attacks_left = 0;
     bool left_game = false;
+
 };
 
 
@@ -31,8 +33,6 @@ private:
     std::stringstream *output;
 public:
     const int lobby_id = 1;
-    // const static int lobby_id = 0;
-    // std::vector<Player_Stats> player_list;
     int lobby_size = 0;
     bool started;
     bool is_private;
@@ -55,7 +55,7 @@ public:
     json verify_puzzle_solution(int socketnum, std::string solution);
     int size();
 
-    void attack();
+    json attack(int socketnum);
     void sendall(json message);
     
 };
