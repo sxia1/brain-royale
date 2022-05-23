@@ -34,7 +34,7 @@ function App() {
 
     let header = {};
     if (location['pathname'] == "/") {
-        header = {"typography": "h2", "align": "center"};
+        header = {"typography": "h4", "align": "center"};
     }
     else {
         header = {"typography": "h4", "align": "left"};
@@ -46,8 +46,7 @@ function App() {
         <Box sx={{ my: 3, px: 7, textAlign: header["align"] }}>
             <Typography variant={ header["typography"] } 
                 className="transition duration-300" component="span" 
-                sx={{ ":hover": { color: '#DD2E44' } }}
-                onClick={() => { navigate("/"); }} >
+                >
                 Brain Royale{ game_id && game_id.length > 2 ? ` ${game_id[2]}` : '' }
             </Typography>
         </Box>
