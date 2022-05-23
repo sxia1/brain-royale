@@ -55,6 +55,7 @@ public:
     void verify_puzzle_solution();
     int size();
 
+    void attack();
     void sendall(json message);
     
 };

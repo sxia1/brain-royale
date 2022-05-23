@@ -132,6 +132,21 @@ int Lobby::size(){
     return lobby.size();
 }
 
+void Lobby::attack(){
+    json response = R"({
+    "type" : "attack",
+    "data" : "you've been attacked!"
+    })"_json;
+    
+    auto it = std::next(lobby.begin(), rand() % lobby.size());
+    auto i = (*it);
+    try {
+        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+    }catch (...){
+        std::cerr << "attack target not found\n";
+    }
+}
+
 void Lobby::sendall(json message){
     json response = R"({
     "type" : "text",
