@@ -147,7 +147,6 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 
 void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol,std::stringstream *output){
     std::cout << "in open\n";
- //   lcontrol.debug();
     lcontrol->add(socketnum, hdl, s, output);
     
 }
