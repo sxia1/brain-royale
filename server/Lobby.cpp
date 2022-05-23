@@ -15,7 +15,7 @@ Lobby::Lobby(){
     this->player_list = player_list;
 }
 
-
+/*
 Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
     std::unordered_map< int, websocketpp::connection_hdl* > lobby;
 
@@ -28,6 +28,7 @@ void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s,std::stringst
     this->s = s;
     this->output = output;
 }
+/*
 
 bool Lobby::add_player(const Player_Stats & player){
     if(this->player_list.size() == 99){
@@ -61,7 +62,7 @@ json Lobby::get_player_stats(){
     json players = player_list; 
     return player_list;
 }
-
+*/
 /*
 output json should be of form:
 {
@@ -77,6 +78,7 @@ output json should be of form:
 code below generates values random for json in javascript 
 code just needs to be translated
 */
+/*
 void Lobby::generate_new_puzzle(){
     let type = types[Math.floor(Math.random() * types.length)];
     let correct_rand = Math.floor(Math.random() * types.length);
@@ -149,6 +151,26 @@ void Lobby::verify_puzzle_solution(){
 
 int Lobby::size(){
     return lobby.size();
+}
+*/
+void Lobby::attack(){
+    json response = R"({
+    "type" : "attack",
+    "data" : "you've been attacked!"
+    })"_json;
+    
+    std::vector<int> to_erase;
+    auto it = std::next(lobby.begin(), rand() % lobby.size());
+    auto i = (*it);
+    try {
+        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+    } catch (...) {
+        std::cout << "Deactivating player " << i.first << std::endl;
+        to_erase.push_back(i.first);
+    }
+    for (int i : to_erase) {
+        lobby.erase(i);
+    }
 }
 
 void Lobby::sendall(){

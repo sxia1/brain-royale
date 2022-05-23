@@ -47,17 +47,17 @@ public:
     
     Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
     void add(int, websocketpp::connection_hdl, server*,std::stringstream *);
-    
+  /*  
     bool add_player(const Player_Stats & player);
     void deactivate_player(const int player_id);
     bool attack_player(const int attacker_id, const int reciever_id);
-    // json get_player_stats(const int player_id);
-    // json get_player_stats();
+     json get_player_stats(const int player_id);
+     json get_player_stats();
     void generate_new_puzzle();
     void verify_puzzle_solution();
     void skip_puzzle();
     int size();
-
+*/
+    void attack();
     void sendall();
-    
 };
