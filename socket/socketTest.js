@@ -16,4 +16,7 @@ var sendSomething = function(data) {
     socket.send(JSON.stringify(data));
 }
 
+
+
+
 // var request = {"type": "joinLobby", "data": "test"}

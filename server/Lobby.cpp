@@ -11,21 +11,24 @@ typedef nlohmann::json json;
 
 Lobby::Lobby(){
     std::unordered_map< int, websocketpp::connection_hdl > lobby;
-}
-/*
-Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
-    std::unordered_map< int, websocketpp::connection_hdl* > lobby;
-    //this->lobby_id++;
     this->is_private = is_private;
     this->player_list = player_list;
 }
-*/
+
+
+Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
+    std::unordered_map< int, websocketpp::connection_hdl* > lobby;
+
+    this->is_private = is_private;
+    this->player_list = player_list;
+}
+
 void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s,std::stringstream *output){
     lobby[id] = hdl;
     this->s = s;
     this->output = output;
 }
-/*
+
 bool Lobby::add_player(const Player_Stats & player){
     if(this->player_list.size() == 99){
         return false;
@@ -46,18 +49,20 @@ bool Lobby::attack_player(const int attacker_id, const int reciever_id){
     return false;
 }
 
-json Lobby::get_player_stats(const int player_id){
-    Player_Stats player_info = this->player_list[player_id];
+// json Lobby::get_player_stats(const int player_id){
+//     Player_Stats player_info = this->player_list[player_id];
 
-    json player = player_info;
+//     json player = player_info;
 
-    return player;
-}
+//     return player;
+// }
 
-json Lobby::get_player_stats(){
-    json players = player_list; 
-    return player_list;
-}
+// json Lobby::get_player_stats(){
+//     json players;
+//     return player_list;
+// }
+
+
 
 
 void Lobby::generate_new_puzzle(){
@@ -76,23 +81,14 @@ void Lobby::verify_puzzle_solution(){
 int Lobby::size(){
     return lobby.size();
 }
-*/
+
 void Lobby::sendall(){
     json response = R"({
     "type" : "text",
     "data" : "hello!"
     })"_json;
-    std::cout << "before sendall()\n";
-    // std::cout << lobby.size() << std::endl;
-// 
+
     for (auto i : lobby){
-        std::cout << "socket id: " << i.first << "\n";
-        (i.second);
-        std::cout << "second worked\n";
-        // std::cout << "opcode: " << websocketpp::frame::opcode::text << "\n";
-
         s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
-
-        // break;
     }
 }
