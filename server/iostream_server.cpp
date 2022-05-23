@@ -34,6 +34,8 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
+
+    if (!message.contains("type")) {return;}
     std::string responseType = message["type"];
     
     if (responseType == "connected") {
@@ -42,26 +44,25 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "data" : null
         })"_json;
         std::cout << "message optcode is" << msg->get_opcode() << "\n";
-        // s->send(hdl, response.dump(), msg->get_opcode());
-        // std::cout << msg->get_opcode() << std::endl;
-        // lcontrol->getList()[0]->add(msg->get_opcode(), hdl,  )
         lcontrol->getList()[0]->sendall();
         
     }
     
-/*    else if(responseType == "joinLobby"){
-        if(lobbies.size() == 0){
-            std::vector<Player_Stats> players = {};
-            Lobby current = Lobby(false, players);
-            lobbies.push_back(current);
+   else if(responseType == "joinLobby"){
+        // if(lobbies.size() == 0){
+        //     std::vector<Player_Stats> players = {};
+        //     Lobby current = Lobby(false, players);
+        //     lobbies.push_back(current);
 
-            json response;
-            response["lobby_id"] = 1;
+        //     json response;
+        //     response["lobby_id"] = 1;
 
-            s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
+        //     s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
 
-        }
-
+        // }
+        1;
+   }
+/*
       
         // Lobby()
         // if(message.contains("data")){
