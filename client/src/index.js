@@ -21,7 +21,7 @@ render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />}>
-                <Route index element={<LandingPage />} />
+                <Route index element={<GamePage/>} />
                 <Route path="join" element={<GamePage />} >
                     <Route path=":code" element={<GamePage />} />
                 </Route>
