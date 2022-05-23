@@ -42,8 +42,10 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "data" : null
         })"_json;
         std::cout << "message optcode is" << msg->get_opcode() << "\n";
-        s->send(hdl, response.dump(), msg->get_opcode());
-       // lcontrol->getList()[0]->sendall();
+        // s->send(hdl, response.dump(), msg->get_opcode());
+        // std::cout << msg->get_opcode() << std::endl;
+        // lcontrol->getList()[0]->add(msg->get_opcode(), hdl,  )
+        lcontrol->getList()[0]->sendall();
         
     }
     
@@ -86,7 +88,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol,std::stringstream *output){
     std::cout << "in open\n";
  //   lcontrol.debug();
-    lcontrol->add(socketnum, &hdl, s, output);
+    lcontrol->add(socketnum, hdl, s, output);
     
 }
 

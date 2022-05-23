@@ -10,7 +10,7 @@ typedef websocketpp::server<websocketpp::config::core> server;
 typedef nlohmann::json json;
 
 Lobby::Lobby(){
-    std::unordered_map< int, websocketpp::connection_hdl* > lobby;
+    std::unordered_map< int, websocketpp::connection_hdl > lobby;
 }
 /*
 Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
@@ -20,7 +20,7 @@ Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_lis
     this->player_list = player_list;
 }
 */
-void Lobby::add(int id, websocketpp::connection_hdl* hdl, server* s,std::stringstream *output){
+void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s,std::stringstream *output){
     lobby[id] = hdl;
     this->s = s;
     this->output = output;
@@ -79,18 +79,20 @@ int Lobby::size(){
 */
 void Lobby::sendall(){
     json response = R"({
-        "type" : "text",
-        "data" : "hello!"
+    "type" : "text",
+    "data" : "hello!"
     })"_json;
-   std::cout << "before sendall()\n";
-   for (auto i : lobby){
-       std::cout << "socket id: " << i.first << "\n";
-       *(i.second);
-       std::cout << "server?" << s << "\n";
-       std::cout << "second worked\n";
-       std::cout << "response: " << response.dump() << "\n";
-       // s->send(*(i.second), response.dump(),websocketpp::frame::opcode::text);
-        std::cout << "ok this worked\n";
+    std::cout << "before sendall()\n";
+    // std::cout << lobby.size() << std::endl;
+// 
+    for (auto i : lobby){
+        std::cout << "socket id: " << i.first << "\n";
+        (i.second);
+        std::cout << "second worked\n";
+        // std::cout << "opcode: " << websocketpp::frame::opcode::text << "\n";
+
+        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+
         break;
     }
 }

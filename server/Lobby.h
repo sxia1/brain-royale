@@ -32,7 +32,7 @@ void to_json(json& j, const Player_Stats& player_info){
 */
 class Lobby{
 private:
-    std::unordered_map< int, websocketpp::connection_hdl* > lobby;
+    std::unordered_map< int, websocketpp::connection_hdl > lobby;
     server *s;    
     std::stringstream *output;
 public:
@@ -46,7 +46,7 @@ public:
     Lobby();
     
    // Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
-    void add(int, websocketpp::connection_hdl*, server*,std::stringstream *);
+    void add(int, websocketpp::connection_hdl, server*,std::stringstream *);
     /*
     bool add_player(const Player_Stats & player);
     void deactivate_player(const int player_id);

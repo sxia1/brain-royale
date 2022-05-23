@@ -21,5 +21,5 @@ public:
     void debug();
     void createLobby();
     std::vector<Lobby*> getList();
-    void add(int id , websocketpp::connection_hdl *hdl, server *s,std::stringstream *output);
+    void add(int id , websocketpp::connection_hdl hdl, server *s,std::stringstream *output);
 };
