@@ -73,21 +73,9 @@ function AttackStyle(props) {
             sx={{ height: 30, width: 'auto', fontSize: 8 }}
             onChange={handleChange} >
 
-            <ToggleButton value="loss" aria-label="loss" sx={{ fontSize: 12 }}>
-                <Tooltip title="send a puzzle to the worst performing player and destroy their dreams of being big brain">
-                    <span>Loss {attack === "loss" ? <KeyboardDoubleArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> : <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
-                </Tooltip>
-            </ToggleButton>
-
-            <ToggleButton value="retaliation" aria-label="retaliation" sx={{ fontSize: 12 }}>
-                <Tooltip title="retaliate against a person who sent you a puzzle">
-                    <span>Retaliation {attack === "retaliation" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
-                </Tooltip>
-            </ToggleButton>
-
             <ToggleButton value="random" aria-label="random" sx={{ fontSize: 12 }}>
                 <Tooltip title="send some rando a puzzle">
-                    <span>Random {attack === "random" ? <ShuffleOnIcon fontSize="small" sx={{ ml: 1/2 }} /> : <ShuffleIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                    <span>Attack{attack === "random" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
                 </Tooltip>
             </ToggleButton>
         </ToggleButtonGroup>
