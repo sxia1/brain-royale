@@ -20,27 +20,20 @@ struct Player_Stats {
     bool left_game = false;
 };
 
-// void to_json(json& j, const Player_Stats& player_info){
-//     j["score"] = player_info.score;
-//     j["time_left"] = player_info.time_left;
-//     j["puzzles_won"] = player_info.puzzles_won;
-//     j["incorrect_solutions"] = player_info.incorrect_solutions;
-//     j["total_attacks"] = player_info.total_attacks;
-//     j["total_times_attacked"] = player_info.total_times_attacked;
-//     j["left_game"] = player_info.left_game;
-// };
 
 class Lobby{
 private:
     std::unordered_map< int, websocketpp::connection_hdl > lobby;
     server *s;    
     std::unordered_map<int, Player_Stats> player_list;
+    std::unordered_map<int, std::string> solutions;
 
     std::stringstream *output;
 public:
-
-    static int lobby_id;
+    const int lobby_id = 1;
+    // const static int lobby_id = 0;
     // std::vector<Player_Stats> player_list;
+    int lobby_size = 0;
     bool started;
     bool is_private;
     int time_left; 
@@ -57,9 +50,9 @@ public:
     bool attack_player(const int attacker_id, const int reciever_id);
     // json get_player_stats(const int player_id);
     // json get_player_stats();
-    void generate_new_puzzle();
-    void verify_puzzle_solution();
+    json generate_new_puzzle(int socketnum);
     void skip_puzzle();
+    void verify_puzzle_solution();
     int size();
 
     void sendall(json message);

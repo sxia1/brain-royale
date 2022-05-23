@@ -85,6 +85,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
                 lobby->add(socketnum, hdl, s);
                 Player_Stats player;
                 lobby->add_player(player, socketnum);
+                response["numUsers"] = lobby->lobby_size;
                 s->send(hdl, response.dump(), msg->get_opcode());
                 found = true;
                 break;
@@ -95,8 +96,20 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         if(not found){
             s->send(hdl, response.dump(), msg->get_opcode());
         }   
+   }
 
-
+   else if(responseType == "generateNewPuzzle"){
+        std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+        bool found = false;
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                json puzzle = lobby->generate_new_puzzle(socketnum);
+                s->send(hdl, puzzle.dump(), msg->get_opcode());
+                found = true;
+                break;
+            }
+        }
    }
 
 /*

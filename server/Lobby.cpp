@@ -1,6 +1,7 @@
 #include "Lobby.h"
 #include <websocketpp/server.hpp>
 #include <websocketpp/config/core.hpp>
+#include <math.h>
 
 #include "json.hpp"
 #define MAX_SIZE 30
@@ -12,15 +13,8 @@ typedef nlohmann::json json;
 Lobby::Lobby(){
     std::unordered_map< int, websocketpp::connection_hdl > lobby;
     this->is_private = false;
+    this->lobby_size = 0;
 }
-
-
-// Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
-//     std::unordered_map< int, websocketpp::connection_hdl* > lobby;
-
-//     this->is_private = is_private;
-//     this->player_list = player_list;
-// }
 
 void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s){
     lobby[id] = hdl;
@@ -33,7 +27,9 @@ bool Lobby::add_player(const Player_Stats & player, int socketnum){
         return false;
     }
     this->player_list.insert(std::pair<int, Player_Stats>(socketnum, player));
-    // this->player_list.push_back(player);
+    this->solutions.insert(std::pair<int, std::string>(socketnum, ""));
+    this->lobby_size += 1;
+
     return true; 
 }
 
@@ -48,24 +44,79 @@ bool Lobby::attack_player(const int attacker_id, const int reciever_id){
     return false;
 }
 
-// json Lobby::get_player_stats(const int player_id){
-//     Player_Stats player_info = this->player_list[player_id];
+json Lobby::generate_new_puzzle(int socketnum){
+    std::vector<std::string> types = {"Word", "Color"};
+    std::vector<std::string> colors = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
+    std::vector<std::string> words = {"Red", "Orange", "Yellow", "Green", "Blue", "Purple"};
+    std::vector<std::string> answers = {"left", "right"};
+    std::cout << floor(rand() % types.size()) << std::endl;
+    std::string type = types[floor(rand() % types.size())];
+    int correct_rand = floor(rand() & types.size());
 
-//     json player = player_info;
+    std::string correct = answers[correct_rand % 2];
+    std::string correct_color = colors[correct_rand];
+    std::string correct_word = words[correct_rand];
+    std::string left_color, right_color, left_word, right_word;
 
-//     return player;
-// }
+    std::string incorrect_color = colors[floor(rand() % colors.size())];
+    std::string incorrect_word = words[floor(rand() % words.size())];
 
-// json Lobby::get_player_stats(){
-//     json players;
-//     return player_list;
-// }
+    while (type == "word" and incorrect_word == correct_word) {
+        incorrect_word = words[floor(rand() % words.size())];
+    }
+
+    while (type == "color" and incorrect_color == correct_color){
+        incorrect_color = colors[floor(rand() % colors.size())];
+    }
+
+    if (type == "word") {
+        if (correct == "left") {
+            left_word = correct_word;
+            right_color = correct_color;
+            right_word = incorrect_word;
+            left_color = incorrect_color;
+        }
+        else {
+            right_word = correct_word;
+            left_color = correct_color;
+            left_word = incorrect_word;
+            right_color = incorrect_color;
+        }
+    }
+
+    else {
+        if (correct == "left") {
+            left_color = correct_color;
+            right_word = correct_word;
+            right_color = incorrect_color;
+            left_word  = incorrect_word;
+        }
+
+        else {
+            right_color = correct_color;
+            left_word = correct_word;
+            left_color = incorrect_color;
+            right_word = incorrect_word;
+        }
+    }
+
+    json response = {
+        {"type", "generatePuzzle"},
+        {"puzzle_information", {
+            {"correct", correct},
+            {"puzzle_type", type },
+            {"correct_word", correct_word},
+            {"left_word", left_word},
+            {"left_color", left_color},
+            {"right_word", right_word},
+            {"right_color", right_color}
+        }}
+    };
+    // json response;
+    solutions[socketnum] = correct;
+    return response;
 
 
-
-
-void Lobby::generate_new_puzzle(){
-    1;
 }
 
 
