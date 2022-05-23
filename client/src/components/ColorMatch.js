@@ -21,12 +21,12 @@ class ColorMatch extends React.Component{
                 <Typography variant="h6" sx={{ mb: 2 }}>Choose the { this.props.info.puzzle_type }: { this.props.info.correct_word }</Typography>
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-                    <Box onClick={this.props.onChange}
+                    <Box onClick={this.props.onChange("left")}
                     sx={{ backgroundColor: this.props.info.left_color, color: '#ffffff',  width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
                         <Typography variant="h5">{this.props.info.left_word}</Typography>
                     </Box>
 
-                    <Box onClick={this.props.onChange}
+                    <Box onClick={this.props.onChange("right")}
                     sx={{ backgroundColor: this.props.info.right_color, color: '#ffffff', width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
                         <Typography variant="h5">{this.props.info.right_word}</Typography>
                     </Box>

@@ -31,14 +31,12 @@ import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, gre
 
 
 function PuzzleCounter(props) {
-    const [countPuzzles, setCountPuzzles] = React.useState(10);
-    const [countSent, setCountSent] = React.useState(0);
     const [maxPuzzles, setMaxPuzzles] = React.useState(20);
 
     return (
         <Box sx={{ align: 'right' }} > 
-            <Typography component="span"> {countPuzzles} </Typography>
-            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ {countSent}) </Typography>
+            <Typography component="span"> {props.countPuzzles} </Typography>
+            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ {props.countSent}) </Typography>
             <Typography component="span" > 🧩 / {maxPuzzles} </Typography>
         </Box>
     );
@@ -88,12 +86,12 @@ class Puzzle extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-        this.state = { count: 10, max: 10 };
+        this.state = { count: 10, max: 10, info: "", puzzle_stack: 10, streak: 0};
     }
         
     componentDidMount() {
         this.requestPuzzle();
-        this.getData();
+        this.getPuzzle();
         this.intervalID = setInterval(() => {
             this.state.count = this.state.count - 0.1;
         }, 100);
@@ -106,6 +104,7 @@ class Puzzle extends React.Component {
         this.intervalID = setInterval(() => {
             this.state.count = this.state.count - 0.1;
         }, 100);
+        //IF TIMER RAN OUT UPDATE COUNTER AND REQUEST NEW PUZZLE
     }
 
     componentWillUnmount() {
@@ -113,17 +112,38 @@ class Puzzle extends React.Component {
     }
 
     requestPuzzle = () => {
-        request = {
+        var request = {
             "type": "generatePuzzle",
             "lobby_id": 1
         };
-        socket.send(JSON.stringify(request));
+        this.props.websocket.send(JSON.stringify(request));
     }
 
-    getData = () => {
-        socket.onmessage = (e) => {
+    attackPlayer = () => {
+        var request = {
+            "type": "attack",
+            "lobby_id": 1
+        };
+        this.props.websocket.send(JSON.stringify(request));
+    }
+
+    getPuzzle = () => {
+        this.props.websocket.onmessage = (e) => {
             var msg = JSON.parse(e.data);
+            this.state.info = msg;
         }
+    }
+
+    verifyPuzzle = (choice) =>{
+        if(choice == this.state.info.correct){
+            this.state.puzzle_stack = this.state.puzzle_stack -1;
+            this.state.streak = this.state.streak +1;
+            if (this.state.streak == 5){
+                this.state.streak = 0;
+                this.attackPlayer();
+            }
+        }
+        this.state.puzzle_stack = this.state.puzzle_stack +1;
     }
 
     render() {
@@ -144,7 +164,7 @@ class Puzzle extends React.Component {
                 <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
                         justifyContent: 'space-between', alignItems: 'center' }}>
                     <AttackStyle />
-                    <PuzzleCounter />
+                    <PuzzleCounter countPuzzles={this.state.puzzle_stack} countSent={this.state.streak}/>
                 </Box>
                 <Box color={progressBarColor} sx={{ pt: 2 }}>
                     <LinearProgress variant="determinate" sx={{ height: 5 }}
@@ -152,7 +172,7 @@ class Puzzle extends React.Component {
                         value={this.state.count * (100/this.state.max) } />
                 </Box>
                 <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
-                    <ColorMatchContainer/>
+                    <ColorMatch info={this.state.info} onChange={this.verifyPuzzle}/>
                 </Box>
 
             </Box>
