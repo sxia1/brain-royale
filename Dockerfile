@@ -4,10 +4,9 @@ ENV PORT=8080
 
 RUN apt-get update -qq
 RUN apt-get upgrade -qq
-
 RUN apt install make -qq
-RUN apt install g++ -y -qq
-RUN apt install libwebsocketpp-dev -y -qq
+RUN apt-get install g++ -y -qq
+RUN apt-get install libwebsocketpp-dev -y -qq
 
 # BOOST
 RUN apt install libboost-all-dev -y -qq
@@ -20,8 +19,8 @@ RUN apt install npm -y -qq
 
 WORKDIR /brain-royale
 COPY . /brain-royale
-RUN npm install
-CMD ["npm", "run", "build"]
+#RUN npm install
+#CMD ["npm", "run", "build"]
 RUN make all
 CMD ["make", "run"]
 EXPOSE 8080
