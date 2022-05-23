@@ -44,23 +44,36 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "data" : null
         })"_json;
         std::cout << "message optcode is" << msg->get_opcode() << "\n";
-        lcontrol->getList()[0]->sendall();
+        // lcontrol->getList()[0]->sendall();
     }
-    
-   else if(responseType == "joinLobby"){
-        // if(lobbies.size() == 0){
-        //     std::vector<Player_Stats> players = {};
-        //     Lobby current = Lobby(false, players);
-        //     lobbies.push_back(current);
+   else if(responseType == "startLobby"){
+        std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+        bool found = false;
+        json response = R"({
+            "type" : "startLobby",
+            "data" : found
+        })"_json;
 
-        //     json response;
-        //     response["lobby_id"] = 1;
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                lobby->started = true;
+                lobby->sendall(response);
+                found = true;
+                break;
+            }
+        }
 
-        //     s->send(hdl, response.dump(), websocketpp::frame::opcode::text);
-
-        // }
-        1;
+        if(not found){
+            1;
+        }    
    }
+
+   else if(responseType == "joinLobby"){
+        std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+   }
+
 /*
       
         // Lobby()

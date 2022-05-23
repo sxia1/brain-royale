@@ -39,6 +39,7 @@ public:
 
     static int lobby_id;
     std::vector<Player_Stats> player_list;
+    bool started;
     bool is_private;
     int time_left; 
     int total_puzzles;
@@ -47,6 +48,7 @@ public:
     
     Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
     void add(int, websocketpp::connection_hdl, server*,std::stringstream *);
+    void start_lobby();
     
     bool add_player(const Player_Stats & player);
     void deactivate_player(const int player_id);
@@ -58,6 +60,6 @@ public:
     void skip_puzzle();
     int size();
 
-    void sendall();
+    void sendall(json message);
     
 };

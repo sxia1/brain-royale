@@ -82,7 +82,7 @@ int Lobby::size(){
     return lobby.size();
 }
 
-void Lobby::sendall(){
+void Lobby::sendall(json message){
     json response = R"({
     "type" : "text",
     "data" : "hello!"
