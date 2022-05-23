@@ -37,24 +37,24 @@ class Game extends React.Component {
         const SOCKET_URL = 'ws://localhost:8000';
         const socket = new WebSocket(SOCKET_URL);
         socket.onopen = () => {
-            this.setState(ws: socket);
+            this.setState({ws: socket});
         }
     }
 
     joinlobby = () => {
-        request = {
+        var request = {
             "type": "joinLobby",
             "data": 1
         };
-        socket.send(JSON.stringify(request));
+        this.state.ws.send(JSON.stringify(request));
     }
 
     getData = () => {
-        socket.onmessage = (e) => {
+        this.state.ws.onmessage = (e) => {
             var msg = JSON.parse(e.data);
-        }
-        if (msg.success){
-            this.setState(numPlayers: msg.numUsers);
+            if (msg.success){
+                this.setState({numPlayers: msg.numUsers});
+            }
         }
     }
 
