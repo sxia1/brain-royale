@@ -22,7 +22,8 @@ class Game extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            ws: null
+            ws: null,
+            numPlayers: 0
         };
     }
 
@@ -52,15 +53,14 @@ class Game extends React.Component {
         socket.onmessage = (e) => {
             var msg = JSON.parse(e.data);
         }
-        if(!msg.success){
-            navigate('/');
+        if (msg.success){
+            this.setState(numPlayers: msg.numUsers);
         }
     }
 
     render() {
         // 99 - 1 = 98 / 2 = 49 
-        let numPlayers = (33 - 1)/2;
-
+        //let numPlayers = (33 - 1)/2;
 
         return (
             <Grid container sx={{ justifyContent: 'space-around', alignContent: 'flex-start', 
@@ -70,7 +70,7 @@ class Game extends React.Component {
                     <Box sx={{ height: 90 }} />
 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-                        {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
+                        {Array.from(new Array(this.state.numPlayers)).map((item, index) => (<Player />))}
                     </Box>
                 </Box>
 
@@ -82,7 +82,7 @@ class Game extends React.Component {
                     <Box sx={{ height: 90 }} />
 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-                        {Array.from(new Array(numPlayers)).map((item, index) => (<Player />))}
+                        {Array.from(new Array(this.state.numPlayers)).map((item, index) => (<Player />))}
                     </Box>
                 </Box>
 
