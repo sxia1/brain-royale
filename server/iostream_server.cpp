@@ -45,7 +45,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "type" : "connect",
             "data" : null
         })"_json;
-        std::cout << "message optcode is" << msg->get_opcode() << "\n";
+        std::cout << "message opcode is " << msg->get_opcode() << "\n";
         lcontrol->getList()[0]->sendall();
     }
     

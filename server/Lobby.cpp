@@ -88,7 +88,17 @@ void Lobby::sendall(){
     "data" : "hello!"
     })"_json;
 
-    for (auto i : lobby){
-        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+    std::vector<int> to_erase;
+
+    for (auto i : lobby) {
+        try {
+            s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+        } catch (...) {
+            std::cout << "Deactivating player " << i.first << std::endl;
+            to_erase.push_back(i.first);
+        }
+    }
+    for (int i : to_erase) {
+        lobby.erase(i);
     }
 }
