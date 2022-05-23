@@ -99,6 +99,7 @@ function AttackStyle(props) {
 class Puzzle extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props);
 
         this.state = { count: 10, max: 10 };
     }
@@ -149,9 +150,6 @@ class Puzzle extends React.Component {
                 </Box>
                 <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
                     <ColorMatchContainer/>
-                </Box>
-                <Box>
-                    <Button variant="contained">Skip <ArrowForwardIcon /></Button>
                 </Box>
 
             </Box>
