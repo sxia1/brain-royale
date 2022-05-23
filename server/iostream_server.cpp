@@ -23,7 +23,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         s->get_alog().write(websocketpp::log::alevel::app,
             "Binary Message Received: "+websocketpp::utility::to_hex(msg->get_payload()));
     }
-
+    std::cout << "new message received\n";
     try {
         s->send(hdl, msg->get_payload(), msg->get_opcode());
     } catch (websocketpp::exception const & e) {
@@ -41,9 +41,9 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "type" : "connect",
             "data" : null
         })"_json;
-        std::cout << msg->get_opcode();
+        std::cout << "message optcode is" << msg->get_opcode() << "\n";
         s->send(hdl, response.dump(), msg->get_opcode());
-        lcontrol->getList()[0]->sendall();
+       // lcontrol->getList()[0]->sendall();
         
     }
     

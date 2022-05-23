@@ -86,9 +86,11 @@ void Lobby::sendall(){
    for (auto i : lobby){
        std::cout << "socket id: " << i.first << "\n";
        *(i.second);
+       std::cout << "server?" << s << "\n";
        std::cout << "second worked\n";
-       std::cout << "opcode: " << websocketpp::frame::opcode::text << "\n";
-        s->send(*(i.second), response.dump(),websocketpp::frame::opcode::text);
+       std::cout << "response: " << response.dump() << "\n";
+       // s->send(*(i.second), response.dump(),websocketpp::frame::opcode::text);
+        std::cout << "ok this worked\n";
         break;
     }
 }
