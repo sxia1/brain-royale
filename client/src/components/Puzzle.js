@@ -88,11 +88,12 @@ class Puzzle extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-
         this.state = { count: 10, max: 10 };
     }
-      
+        
     componentDidMount() {
+        this.requestPuzzle();
+        this.getData();
         this.intervalID = setInterval(() => {
             this.state.count = this.state.count - 0.1;
         }, 100);
@@ -109,6 +110,20 @@ class Puzzle extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.intervalID);
+    }
+
+    requestPuzzle = () => {
+        request = {
+            "type": "generatePuzzle",
+            "lobby_id": 1
+        };
+        socket.send(JSON.stringify(request));
+    }
+
+    getData = () => {
+        socket.onmessage = (e) => {
+            var msg = JSON.parse(e.data);
+        }
     }
 
     render() {
