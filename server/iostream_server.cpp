@@ -112,6 +112,22 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         }
    }
 
+   else if(responseType == "verifyPuzzle"){
+       std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+        std::string solution = message["side"];
+        bool found = false;
+
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                json response = lobby->verify_puzzle_solution(socketnum, solution);
+                s->send(hdl, response.dump(), msg->get_opcode());
+                found = true;
+                break;
+            }
+        }
+   }
+
 /*
       
         // Lobby()

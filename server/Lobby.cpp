@@ -124,8 +124,23 @@ void Lobby::skip_puzzle(){
     1;
 }
 
-void Lobby::verify_puzzle_solution(){
-    1;
+json Lobby::verify_puzzle_solution(int socketnum, std::string user_solution){
+    std::string solution = solutions[socketnum];
+
+    if(user_solution == solution){
+        player_list[socketnum].correct_solutions +=1;
+    }
+    else{
+        player_list[socketnum].incorrect_solutions += 1;
+    }
+
+    json response = {
+        {"type", "verifyPuzzle"},
+        {"correct", solution == user_solution}
+    };
+
+    return response;
+
 }
 
 int Lobby::size(){
