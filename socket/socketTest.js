@@ -16,7 +16,9 @@ var sendSomething = function(data) {
     socket.send(JSON.stringify(data));
 }
 
+var ping = function() {
+    socket.send(JSON.stringify(""));
+}
 
-
-
+window.setInterval(ping, 1000);
 // var request = {"type": "joinLobby", "data": "test"}

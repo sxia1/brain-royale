@@ -32,6 +32,8 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         std::cout << "FAILURE!!!" << std::endl;
     }
 
+    if (!json::accept(msg->get_payload())) {return;}
+
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
 
