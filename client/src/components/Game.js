@@ -1,6 +1,8 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 
+import {useState, useEffect} from "react";
+
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -17,32 +19,27 @@ import {
 } from "react-router-dom";
 
 
+const SOCKET_URL = 'ws://localhost:8080';
+const socket = new WebSocket(SOCKET_URL);
+
 class Game extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            ws: null,
+            ws: socket,
             numPlayers: 0
         };
     }
 
     componentDidMount(){
-        this.connect();
-    }
-    
-    connect = () => {
-        var SOCKET_URL = 'ws://localhost:8080';
-        var socket = new WebSocket(SOCKET_URL);
-        socket.onopen = () => {
-            console.log(socket);
-            this.setState({ws: socket});
-            console.log(this.state.ws);
-            console.log("I was called");
+        this.state.ws.onopen = () =>{
             this.joinLobby();
-            this.getData();
+             this.state.ws.onmessage = (e) => {
+                this.getData(e);
+            }
         }
-    }
+   }
 
     joinLobby = () => {
         var request = {
@@ -52,12 +49,10 @@ class Game extends React.Component {
         this.state.ws.send(JSON.stringify(request));
     }
 
-    getData = () => {
-        this.state.ws.onmessage = (e) => {
-            var msg = JSON.parse(e.data);
-            if (msg.success){
-                this.setState({numPlayers: msg.numUsers});
-            }
+    getData = (e) => {
+        var msg = JSON.parse(e.data);
+        if (msg.success){
+            this.setState({numPlayers: msg.numUsers});
         }
     }
 

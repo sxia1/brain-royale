@@ -90,8 +90,10 @@ class Puzzle extends React.Component {
     }
         
     componentDidMount() {
-        this.requestPuzzle();
-        this.getPuzzle();
+        if (this.props.websocket != null){
+            this.requestPuzzle();
+            this.getPuzzle();
+        }
         this.intervalID = setInterval(() => {
             this.state.count = this.state.count - 0.1;
         }, 100);
