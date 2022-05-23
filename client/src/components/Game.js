@@ -29,19 +29,22 @@ class Game extends React.Component {
 
     componentDidMount(){
         this.connect();
-        this.joinLobby();
-        this.getData();
     }
     
     connect = () => {
-        const SOCKET_URL = 'ws://localhost:8000';
-        const socket = new WebSocket(SOCKET_URL);
+        var SOCKET_URL = 'ws://localhost:8080';
+        var socket = new WebSocket(SOCKET_URL);
         socket.onopen = () => {
+            console.log(socket);
             this.setState({ws: socket});
+            console.log(this.state.ws);
+            console.log("I was called");
+            this.joinLobby();
+            this.getData();
         }
     }
 
-    joinlobby = () => {
+    joinLobby = () => {
         var request = {
             "type": "joinLobby",
             "data": 1
