@@ -35,7 +35,7 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
 
-    if (!message.contains("type")) {return;}
+    if (!message.contains("type") || !message["type"].is_string()) {return;}
     std::string responseType = message["type"];
 
     if (responseType == "connected") {
