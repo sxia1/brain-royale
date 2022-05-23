@@ -12,8 +12,8 @@ class iostream_server;
 
 struct Player_Stats {
     int score = 0;
-    int time_left;
-    int puzzles_won = 0;
+    int time_left = 0;
+    int correct_solutions = 0;
     int incorrect_solutions = 0;
     int total_attacks = 0;
     int total_times_attacked = 0;
@@ -52,7 +52,7 @@ public:
     // json get_player_stats();
     json generate_new_puzzle(int socketnum);
     void skip_puzzle();
-    void verify_puzzle_solution();
+    json verify_puzzle_solution(int socketnum, std::string solution);
     int size();
 
     void sendall(json message);
