@@ -11,13 +11,13 @@ typedef websocketpp::server<websocketpp::config::core> server;
 class iostream_server;
 
 struct Player_Stats {
-    int score; 
+    int score = 0;
     int time_left;
-    int puzzles_won;
-    int incorrect_solutions;
-    int total_attacks;
-    int total_times_attacked;
-    bool left_game;
+    int puzzles_won = 0;
+    int incorrect_solutions = 0;
+    int total_attacks = 0;
+    int total_times_attacked = 0;
+    bool left_game = false;
 };
 
 // void to_json(json& j, const Player_Stats& player_info){
@@ -34,11 +34,13 @@ class Lobby{
 private:
     std::unordered_map< int, websocketpp::connection_hdl > lobby;
     server *s;    
+    std::unordered_map<int, Player_Stats> player_list;
+
     std::stringstream *output;
 public:
 
     static int lobby_id;
-    std::vector<Player_Stats> player_list;
+    // std::vector<Player_Stats> player_list;
     bool started;
     bool is_private;
     int time_left; 
@@ -46,11 +48,11 @@ public:
 
     Lobby();
     
-    Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
-    void add(int, websocketpp::connection_hdl, server*,std::stringstream *);
+    // Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
+    void add(int, websocketpp::connection_hdl, server*);
     void start_lobby();
     
-    bool add_player(const Player_Stats & player);
+    bool add_player(const Player_Stats & player, int socketnum);
     void deactivate_player(const int player_id);
     bool attack_player(const int attacker_id, const int reciever_id);
     // json get_player_stats(const int player_id);

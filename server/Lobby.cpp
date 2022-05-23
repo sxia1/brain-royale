@@ -11,30 +11,29 @@ typedef nlohmann::json json;
 
 Lobby::Lobby(){
     std::unordered_map< int, websocketpp::connection_hdl > lobby;
-    this->is_private = is_private;
-    this->player_list = player_list;
+    this->is_private = false;
 }
 
 
-Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
-    std::unordered_map< int, websocketpp::connection_hdl* > lobby;
+// Lobby::Lobby(const bool is_private, const std::vector<Player_Stats> & player_list){
+//     std::unordered_map< int, websocketpp::connection_hdl* > lobby;
 
-    this->is_private = is_private;
-    this->player_list = player_list;
-}
+//     this->is_private = is_private;
+//     this->player_list = player_list;
+// }
 
-void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s,std::stringstream *output){
+void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s){
     lobby[id] = hdl;
     this->s = s;
     this->output = output;
 }
 
-bool Lobby::add_player(const Player_Stats & player){
+bool Lobby::add_player(const Player_Stats & player, int socketnum){
     if(this->player_list.size() == 99){
         return false;
     }
-
-    this->player_list.push_back(player);
+    this->player_list.insert(std::pair<int, Player_Stats>(socketnum, player));
+    // this->player_list.push_back(player);
     return true; 
 }
 

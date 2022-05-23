@@ -14,7 +14,7 @@ using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
 
-void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg, LobbyController* lcontrol) {
+void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg, LobbyController* lcontrol, int socketnum) {
     std::cout << "Hi, this humble on_message function was called!!!" << std::endl;
     if (msg->get_opcode() == websocketpp::frame::opcode::text) {
         s->get_alog().write(websocketpp::log::alevel::app,
@@ -44,34 +44,59 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "data" : null
         })"_json;
         std::cout << "message optcode is" << msg->get_opcode() << "\n";
-        // lcontrol->getList()[0]->sendall();
+        s->send(hdl, response.dump(), msg->get_opcode());
     }
+
    else if(responseType == "startLobby"){
         std::vector<Lobby *> lobbies = lcontrol->getList();
         int lobby_number = message["lobby_id"];
         bool found = false;
         json response = R"({
             "type" : "startLobby",
-            "data" : found
+            "data" : "success"
         })"_json;
 
         for(Lobby* lobby: lobbies){
             if(lobby->lobby_id == lobby_number){
                 lobby->started = true;
-                lobby->sendall(response);
                 found = true;
+                lobby->sendall(response);
                 break;
             }
         }
+        response["data"] = "lobby does not exist";
 
         if(not found){
-            1;
+            s->send(hdl, response.dump(), msg->get_opcode());
         }    
    }
 
    else if(responseType == "joinLobby"){
         std::vector<Lobby *> lobbies = lcontrol->getList();
         int lobby_number = message["lobby_id"];
+        bool found = false;
+        json response = R"({
+            "type" : "joinLobby",
+            "data" : "success"
+        })"_json;
+
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                lobby->add(socketnum, hdl, s);
+                Player_Stats player;
+                lobby->add_player(player, socketnum);
+                s->send(hdl, response.dump(), msg->get_opcode());
+                found = true;
+                break;
+            }
+        }       
+
+        response["data"] = "lobby does not exist";
+        if(not found){
+            s->send(hdl, response.dump(), msg->get_opcode());
+        }   
+
+
    }
 
 /*
@@ -126,7 +151,7 @@ iostream_server::iostream_server(std::stringstream *output, int socketnum, Lobby
         s.set_open_handler(std::bind(&on_open, &s, std::placeholders::_1, socketnum, lcontrol, output));
         std::cout << "after open\n";
         s.set_close_handler(std::bind(&on_close, &s, std::placeholders::_1));
-        s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2,lcontrol));
+        s.set_message_handler(std::bind(&iostream_on_message,&s,std::placeholders::_1,std::placeholders::_2,lcontrol,socketnum));
         con = s.get_connection();
         con->start();
 }
