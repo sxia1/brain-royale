@@ -93,6 +93,6 @@ void Lobby::sendall(){
 
         s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
 
-        break;
+        // break;
     }
 }

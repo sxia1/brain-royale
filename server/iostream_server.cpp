@@ -34,8 +34,10 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
 
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
+
+    if (!message.contains("type")) {return;}
     std::string responseType = message["type"];
-    
+
     if (responseType == "connected") {
         json response = R"({
             "type" : "connect",
@@ -46,7 +48,6 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         // std::cout << msg->get_opcode() << std::endl;
         // lcontrol->getList()[0]->add(msg->get_opcode(), hdl,  )
         lcontrol->getList()[0]->sendall();
-        
     }
     
 /*    else if(responseType == "joinLobby"){
