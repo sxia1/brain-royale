@@ -4,6 +4,12 @@ import ReactDOM from 'react-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, grey, blueGrey } from '@mui/material/colors';
 
@@ -16,6 +22,18 @@ function ColorMatch(props){
     const types = ["Word", "Color"];
     const game = props['info']['game']
     let type = Math.floor(Math.random()*2);
+
+    const [open, setOpen] = React.useState(false);
+    const [selected, setSelected] = React.useState(false);
+    
+    function handleOpen(event, value) {
+        setOpen(true);
+        setSelected(value);
+    }
+
+    function handleClose(event) {
+        setOpen(false);
+    }
 
     console.log(props['info'])
 
@@ -34,14 +52,29 @@ function ColorMatch(props){
 
     return (
       <div>
+
+		<Dialog onClose={handleClose} open={open}>
+		  <DialogTitle>{`You selected ${selected}`}</DialogTitle>
+          <DialogContent>
+          	<DialogContentText id="alert-dialog-description">
+		  	{selected == target ? `Good job!` : `You were wrong!`}
+			</DialogContentText>
+		  </DialogContent>
+		</Dialog>
           <Typography variant="h6" sx={{ mb: 2 }}>Choose { game['type'] } { target }</Typography>
 
           <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-              <Box sx={{ backgroundColor: colors[colorA], color: '#ffffff',  width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
+              <Box sx={{ backgroundColor: colors[colorA], color: '#ffffff',  width: 1/3, m: 1, p: 3, textAlign: 'center' }} 
+                  value={words[colorB]} 
+                  onClick={(e) => handleOpen(e,words[colorB])}
+                  >
                   <Typography variant="h5">{words[colorB]}</Typography>
               </Box>
 
-              <Box sx={{ backgroundColor: colors[colorB], color: '#ffffff', width: 1/3, m: 1, p: 3, textAlign: 'center' }}>
+              <Box sx={{ backgroundColor: colors[colorB], color: '#ffffff', width: 1/3, m: 1, p: 3, textAlign: 'center' }}
+                  value={words[colorA]} 
+                  onClick={(e) => handleOpen(e,words[colorA])}
+                  >
                   <Typography variant="h5">{words[colorA]}</Typography>
               </Box>
           </Box>
