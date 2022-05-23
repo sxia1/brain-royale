@@ -56,6 +56,7 @@ public:
     int size();
 
     json attack(int socketnum);
+    json win(int socketnum);
     void sendall(json message);
     
 };

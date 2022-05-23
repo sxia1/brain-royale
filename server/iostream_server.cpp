@@ -141,7 +141,22 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
                 break;
             }
         }
-   }
+    }
+
+    else if (responseType == "win"){
+        std::vector<Lobby *> lobbies = lcontrol->getList();
+        int lobby_number = message["lobby_id"];
+        bool found = false;
+
+        for(Lobby* lobby: lobbies){
+            if(lobby->lobby_id == lobby_number){
+                json response = lobby->win(socketnum);
+                lobby->sendall(response);
+                found = true;
+                break;
+            }
+        }
+    }
 
 }
 

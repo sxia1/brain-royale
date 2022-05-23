@@ -184,6 +184,14 @@ json Lobby::attack(int socketnum){
     return attacker_response;
 }
 
+json Lobby::win(int socketnum){
+    json winner_response = {
+        {"type", "win"},
+        {"winner", socketnum}
+    };
+    return winner_response;
+}
+
 void Lobby::sendall(json message){
     json response = R"({
     "type" : "text",
