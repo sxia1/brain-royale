@@ -16,11 +16,10 @@ Lobby::Lobby(){
     this->lobby_size = 0;
 }
 
+
 void Lobby::add(int id, websocketpp::connection_hdl hdl, server* s){
-    lobby[id] = hdl;
-    this->s = s;
-    this->output = output;
-}
+
+
 
 bool Lobby::add_player(const Player_Stats & player, int socketnum){
     if(this->player_list.size() == 99){
@@ -43,6 +42,7 @@ bool Lobby::attack_player(const int attacker_id, const int reciever_id){
 
     return false;
 }
+
 
 json Lobby::generate_new_puzzle(int socketnum){
     std::vector<std::string> types = {"Word", "Color"};
@@ -117,6 +117,7 @@ json Lobby::generate_new_puzzle(int socketnum){
     return response;
 
 
+
 }
 
 
@@ -148,6 +149,26 @@ json Lobby::verify_puzzle_solution(int socketnum, std::string user_solution){
 
 int Lobby::size(){
     return lobby.size();
+}
+*/
+void Lobby::attack(){
+    json response = R"({
+    "type" : "attack",
+    "data" : "you've been attacked!"
+    })"_json;
+    
+    std::vector<int> to_erase;
+    auto it = std::next(lobby.begin(), rand() % lobby.size());
+    auto i = (*it);
+    try {
+        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+    } catch (...) {
+        std::cout << "Deactivating player " << i.first << std::endl;
+        to_erase.push_back(i.first);
+    }
+    for (int i : to_erase) {
+        lobby.erase(i);
+    }
 }
 
 json Lobby::attack(int socketnum){
@@ -198,7 +219,17 @@ void Lobby::sendall(json message){
     "data" : "hello!"
     })"_json;
 
-    for (auto i : lobby){
-        s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+    std::vector<int> to_erase;
+
+    for (auto i : lobby) {
+        try {
+            s->send(i.second, response.dump(), websocketpp::frame::opcode::text);
+        } catch (...) {
+            std::cout << "Deactivating player " << i.first << std::endl;
+            to_erase.push_back(i.first);
+        }
+    }
+    for (int i : to_erase) {
+        lobby.erase(i);
     }
 }

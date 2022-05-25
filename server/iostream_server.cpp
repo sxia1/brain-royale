@@ -32,10 +32,12 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         std::cout << "FAILURE!!!" << std::endl;
     }
 
+    if (!json::accept(msg->get_payload())) {return;}
+
     json message = json::parse(msg->get_payload());
     std::cout << message << std::endl;
 
-    if (!message.contains("type")) {return;}
+    if (!message.contains("type") || !message["type"].is_string()) {return;}
     std::string responseType = message["type"];
 
     if (responseType == "connected") {
@@ -43,8 +45,10 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "type" : "connect",
             "data" : null
         })"_json;
+
         std::cout << "message optcode is" << msg->get_opcode() << "\n";
         s->send(hdl, response.dump(), msg->get_opcode());
+
     }
 
    else if(responseType == "startLobby"){
@@ -157,7 +161,9 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             }
         }
     }
-
+    else if (responseType == "attack"){
+        lcontrol->getList()[0]->attack();
+    }
 }
 
 void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol,std::stringstream *output){
