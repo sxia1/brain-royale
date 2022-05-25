@@ -38,7 +38,7 @@ std::vector<Lobby*> LobbyController::getList(){
 
 void LobbyController::add(int id, websocketpp::connection_hdl hdl, server *s,std::stringstream *output){
     std::cerr << "in add\n";
-    lobbies[0]->add(id, hdl, s,output);
+    lobbies[0]->add(id, hdl, s);
     std::cerr << "out add\n";
     return;
 }
