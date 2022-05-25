@@ -1,14 +1,14 @@
 # brain-royale
 
 # To Run
-$ docker build -t <tagname> .
-$ docker run -dp 8080:8080 <tagname>
+* $ docker build -t <tagname> .
+* $ docker run -dp 8080:8080 <tagname>
 
 # To See Containers
-$ docker container ls -al
+* $ docker container ls -al
 
 # To Stop Container
-$ docker stop <containerID>
+* $ docker stop <containerID>
 
 # Installing Required Libraries
 
