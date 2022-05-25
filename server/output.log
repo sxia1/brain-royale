@@ -1,1 +1,9 @@
-[2022-05-23 01:20:17] [connect] WebSocket Connection iostream transport v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:100.0) Gecko/20100101 Firefox/100.0" / 101
+[2022-05-24 23:40:27] [connect] WebSocket Connection iostream transport v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:100.0) Gecko/20100101 Firefox/100.0" / 101
+[2022-05-24 23:40:27] [application] Text Message Received: {"type":"joinLobby","data":1}
+[2022-05-24 23:40:27] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 29 payload bytes
+[2022-05-24 23:40:27] [frame_header] Header Bytes: 
+[0] (2) 81 1D 
+
+[2022-05-24 23:40:27] [frame_payload] Payload Bytes: 
+[0] (29) [1] {"type":"joinLobby","data":1}
+

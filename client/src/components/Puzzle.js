@@ -64,7 +64,7 @@ function AttackStyle(props) {
     }
 
     return (
-    <Box>
+        <Box>
         <ToggleButtonGroup size="small" exclusive aria-label="attack style"
             orientation={props.orientation || 'horizontal'}
             color="error" value={attack}
@@ -77,7 +77,7 @@ function AttackStyle(props) {
                 </Tooltip>
             </ToggleButton>
         </ToggleButtonGroup>
-    </Box>
+        </Box>
     );
 
 }
@@ -136,23 +136,46 @@ class Puzzle extends React.Component {
         }
     }
 
+    verifyPuzzle = (choice) =>{
+        if(choice == this.state.info.correct){
+            this.state.puzzle_stack = this.state.puzzle_stack -1;
+            this.state.streak = this.state.streak +1;
+            if (this.state.streak == 5){
+                this.state.streak = 0;
+                this.attackPlayer();
+            }
+        }
+        this.state.puzzle_stack = this.state.puzzle_stack +1;
+    }
 
-    return (
-        <Box>
-            <PuzzleTimer count={count} max={max} />
-            <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
-                    justifyContent: 'space-between', alignItems: 'center' }}>
-                <AttackStyle />
-                <PuzzleCounter />
-            </Box>
-            <Box color={progressBarColor} sx={{ pt: 2 }}>
-                <LinearProgress variant="determinate" sx={{ height: 5 }}
-                    color='inherit'
-                    value={count * (100/max) } />
-            </Box>
-            <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
-                <ColorMatch info={info}/>
-            </Box>
+    render() {
+        let progressBarColor = blue[700]; 
+        if (this.state.count > this.state.max * .75) {
+            progressBarColor = red[900];
+        }
+        else if (this.state.count > this.state.max * .5) {
+            progressBarColor = red[500];
+        }
+        else if (this.state.count > this.state.max * .25) {
+            progressBarColor = deepPurple[500];
+        }
+
+        return (
+            <Box>
+                <PuzzleTimer count={this.state.count} max={this.state.max} />
+                <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
+                        justifyContent: 'space-between', alignItems: 'center' }}>
+                    <AttackStyle />
+                    <PuzzleCounter countPuzzles={this.state.puzzle_stack} countSent={this.state.streak}/>
+                </Box>
+                <Box color={progressBarColor} sx={{ pt: 2 }}>
+                    <LinearProgress variant="determinate" sx={{ height: 5 }}
+                        color='inherit'
+                        value={this.state.count * (100/this.state.max) } />
+                </Box>
+                <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
+                    <ColorMatch info={this.state.info} onChange={this.verifyPuzzle}/>
+                </Box>
 
             </Box>
         );
