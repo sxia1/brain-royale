@@ -41,7 +41,7 @@ function ColorMatch(props){
 
     let colorA = words.indexOf(game['colors'][0]); // Math.floor(Math.random()*6);
     let colorB = words.indexOf(game['colors'][1]); // Math.floor(Math.random()*5);
-    /*
+
     if(colorB >= colorA){
       colorB ++;
     }

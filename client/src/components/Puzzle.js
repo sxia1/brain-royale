@@ -136,28 +136,27 @@ class Puzzle extends React.Component {
         }
     }
 
-
-    return (
-        <Box>
-            <PuzzleTimer count={count} max={max} />
-            <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
-                    justifyContent: 'space-between', alignItems: 'center' }}>
-                <AttackStyle />
-                <PuzzleCounter />
-            </Box>
-            <Box color={progressBarColor} sx={{ pt: 2 }}>
-                <LinearProgress variant="determinate" sx={{ height: 5 }}
-                    color='inherit'
-                    value={count * (100/max) } />
-            </Box>
-            <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
-                <ColorMatch info={info}/>
-            </Box>
-
+    render(){
+        return (
+            <Box>
+                <PuzzleTimer count={count} max={max} />
+                <Box container sx={{ display: 'flex', flexWrap: 'wrap', 
+                        justifyContent: 'space-between', alignItems: 'center' }}>
+                    <AttackStyle />
+                    <PuzzleCounter />
+                </Box>
+                <Box color={progressBarColor} sx={{ pt: 2 }}>
+                    <LinearProgress variant="determinate" sx={{ height: 5 }}
+                        color='inherit'
+                        value={count * (100/max) } />
+                </Box>
+                <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
+                    <ColorMatch info={info}/>
+                </Box>
             </Box>
         );
-    }
-};
+    };
+}
 
 /*
             <Skeleton variant="rectangular" animation="wave" 
