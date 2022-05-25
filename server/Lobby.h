@@ -57,6 +57,7 @@ public:
     json verify_puzzle_solution(int socketnum, std::string solution);
     int size();
 
+    void attack();
     json attack(int socketnum);
     json win(int socketnum);
     void sendall(json message);
