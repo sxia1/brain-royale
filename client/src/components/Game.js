@@ -19,30 +19,33 @@ import {
 } from "react-router-dom";
 
 
-const SOCKET_URL = 'ws://localhost:8080';
-const socket = new WebSocket(SOCKET_URL);
 
 class Game extends React.Component {
 
     constructor(props){
         super(props);
+	const SOCKET_URL = 'ws://localhost:8080';
+	const socket = new WebSocket(SOCKET_URL);
+
+	socket.addEventListener('message', function (event) {
+		console.log('Message from server ', JSON.parse(event.data));
+	});
+
         this.state = {
             ws: socket,
             numPlayers: 0
         };
-        this.joinLobby = this.joinLobby.bind(this);
-        this.getData = this.getData.bind(this);
     }
 
     componentDidMount(){
         this.state.ws.onopen = () =>{
             this.joinLobby();
-            this.state.ws.onmessage = (e) => {
-                this.getData(e);
-            }
         }
-        setTimeout(() => {  console.log("forced wait!"); }, 2000);
-   }
+		this.state.ws.onmessage = (e) => {
+	    this.getData(e);
+	}
+ 
+    }
 
     joinLobby = () => {
         var request = {
@@ -54,6 +57,7 @@ class Game extends React.Component {
 
     getData = (e) => {
         var msg = JSON.parse(e.data);
+	console.log(e);
         if (msg.success){
             this.setState({numPlayers: msg.numUsers});
         }
