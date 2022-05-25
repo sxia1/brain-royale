@@ -1,1 +1,16 @@
-[2022-05-23 01:20:17] [connect] WebSocket Connection iostream transport v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:100.0) Gecko/20100101 Firefox/100.0" / 101
+[2022-05-22 21:16:44] [connect] WebSocket Connection iostream transport v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:100.0) Gecko/20100101 Firefox/100.0" / 101
+[2022-05-22 21:16:44] [application] Text Message Received: {"type":"connected","data":"Howdy"}
+[2022-05-22 21:16:44] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 35 payload bytes
+[2022-05-22 21:16:44] [frame_header] Header Bytes: 
+[0] (2) 81 23 
+
+[2022-05-22 21:16:44] [frame_payload] Payload Bytes: 
+[0] (35) [1] {"type":"connected","data":"Howdy"}
+
+[2022-05-22 21:16:44] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 31 payload bytes
+[2022-05-22 21:16:44] [frame_header] Header Bytes: 
+[0] (2) 81 1F 
+
+[2022-05-22 21:16:44] [frame_payload] Payload Bytes: 
+[0] (31) [1] {"data":"hello!","type":"text"}
+
