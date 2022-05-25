@@ -13,6 +13,7 @@ private:
     string type;
     string target;
     string version;
+    bool upgrade;
  //   string rest;
 public:
     //request(char*);
@@ -22,6 +23,7 @@ public:
     string getType();
     string getTarget();
     string getVersion();
+    bool isUpgrade();
    // char* getRest();
     char* to_string();
 };

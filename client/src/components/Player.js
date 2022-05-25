@@ -34,6 +34,7 @@ function Player(props) {
     const [colors, setColors] = React.useState([]); 
     const [icon, setIcon] = React.useState(getEmoji()); 
 
+
     function updatePlayerShades() {
         let shuffled  = [Object.values(color)[shade], Object.values(color)[shade + 1]]; 
         // player_shades.push(player_color[random([50,100,200,300,400].filter(color => !player_shades.includes(color)))]);
@@ -43,12 +44,19 @@ function Player(props) {
 
     React.useEffect(() => {updatePlayerShades()}, [shade]);
 
+    const clickedUser = (event) => {
+        console.log(`whomai ${icon}`);
+    };
+
     // opacity: `${Math.random() * (.25) + .75}`, 
     return (
         <Box sx={{ background: `linear-gradient(to right bottom, ${colors.slice(0,2).join(',')})`, 
             width: 1/5, height: 'auto', p: 1.5, m: 1/3, borderRadius: 28 }}
             onMouseEnter={() => setShade(shade + 1)}
-            onMouseLeave={() => setShade(shade - 1)} >
+            onMouseLeave={() => setShade(shade - 1)} 
+            onClick={clickedUser}
+            >
+            
             <img src={icon} />
         </Box>
     );
