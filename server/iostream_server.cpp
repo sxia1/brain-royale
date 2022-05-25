@@ -32,8 +32,15 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         std::cout << "FAILURE!!!" << std::endl;
     }
 
-    json message = json::parse(msg->get_payload());
-    std::cout << message << std::endl;
+    json message;
+
+    try {
+        message = json::parse(msg->get_payload());
+        std::cout << message << std::endl;
+    } catch (...) {
+        std::cout << "JSON string parse failed" << std::endl;
+        return;
+    }
 
     if (!message.contains("type")) {return;}
     std::string responseType = message["type"];
