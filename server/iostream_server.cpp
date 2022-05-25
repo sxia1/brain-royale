@@ -43,13 +43,8 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
             "type" : "connect",
             "data" : null
         })"_json;
-<<<<<<< HEAD
-        std::cout << "message optcode is" << msg->get_opcode() << "\n";
-        s->send(hdl, response.dump(), msg->get_opcode());
-=======
         std::cout << "message opcode is " << msg->get_opcode() << "\n";
         lcontrol->getList()[0]->sendall();
->>>>>>> parent of ea14246 (Merge pull request #7 from sxia1/ghaz-endpoints)
     }
     
    else if(responseType == "joinLobby"){
@@ -66,24 +61,6 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
         // }
         1;
    }
-<<<<<<< HEAD
-
-    else if(responseType == "attack"){
-       std::vector<Lobby *> lobbies = lcontrol->getList();
-        int lobby_number = message["lobby_id"];
-        bool found = false;
-
-        for(Lobby* lobby: lobbies){
-            if(lobby->lobby_id == lobby_number){
-                json response = lobby->attack(socketnum);
-                s->send(hdl, response.dump(), msg->get_opcode());
-                found = true;
-                break;
-            }
-        }
-   }
-
-=======
 /*
       
         // Lobby()
@@ -108,7 +85,6 @@ void iostream_on_message(server* s, websocketpp::connection_hdl hdl, message_ptr
     else if (responseType == "attack"){
         lcontrol->getList()[0]->attack();
     }
->>>>>>> parent of ea14246 (Merge pull request #7 from sxia1/ghaz-endpoints)
 }
 
 void on_open(server* s, websocketpp::connection_hdl hdl, int socketnum, LobbyController* lcontrol,std::stringstream *output){
