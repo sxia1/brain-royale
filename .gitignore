@@ -46,3 +46,4 @@ _*
 node_modules
 build
 server/server
+package-lock.json
