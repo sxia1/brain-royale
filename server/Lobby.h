@@ -41,6 +41,7 @@ public:
 
     Lobby();
     
+
     // Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
     void add(int, websocketpp::connection_hdl, server*);
     void start_lobby();
@@ -51,11 +52,13 @@ public:
     // json get_player_stats(const int player_id);
     // json get_player_stats();
     json generate_new_puzzle(int socketnum);
+
     void skip_puzzle();
     json verify_puzzle_solution(int socketnum, std::string solution);
     int size();
 
     json attack(int socketnum);
+    json win(int socketnum);
     void sendall(json message);
     
 };
