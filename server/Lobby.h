@@ -40,16 +40,12 @@ public:
     int total_puzzles;
 
     Lobby();
-    
-    // Lobby(const bool is_private, const std::vector<Player_Stats> & player_list);
     void add(int, websocketpp::connection_hdl, server*);
     void start_lobby();
     
     bool add_player(const Player_Stats & player, int socketnum);
     void deactivate_player(const int player_id);
     bool attack_player(const int attacker_id, const int reciever_id);
-    // json get_player_stats(const int player_id);
-    // json get_player_stats();
     json generate_new_puzzle(int socketnum);
     void skip_puzzle();
     json verify_puzzle_solution(int socketnum, std::string solution);
