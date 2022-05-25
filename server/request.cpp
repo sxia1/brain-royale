@@ -25,7 +25,7 @@ request::request(char* re){
     i = line.find(' ');
     target =  string(line.substr(0,i)); //target route?
     version =  string(line.substr(i+1)); //last part of starting line
-    
+    upgrade = req.find("Upgrade: websocket") != string::npos;
 }
 
 string request::getType(){
@@ -38,6 +38,11 @@ string request::getTarget(){
 string request::getVersion(){
     return version;
 }
+
+bool request::isUpgrade(){
+    return upgrade;
+}
+
 /*
 string* request::getRest(){
     return rest;

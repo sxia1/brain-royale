@@ -47,14 +47,12 @@ function GamePlayModeButtons(prop) {
            sx={{ justifyContent: 'center' }} > 
 
             <Button variant="contained" sx={{ m: 1 }}
-				onClick={() => {
-				navigate("/tutorial"); }} >
+				onClick={() => { navigate("/tutorial"); }} >
 				Tutorial
 			</Button>
 
             <Button variant="contained" sx={{ m: 1 }} 
-				onClick={() => {
-				navigate("/join"); }} >
+				onClick={() => { navigate("/join"); }} >
 				Join Game
 			</Button>
 
