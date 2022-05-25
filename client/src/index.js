@@ -21,9 +21,12 @@ render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />}>
-                <Route index element={<LandingPage />} />
-                <Route path="join" element={<GamePage />} />
+                <Route index element={<GamePage/>} />
+                <Route path="join" element={<GamePage />} >
+                    <Route path=":code" element={<GamePage />} />
+                </Route>
                 <Route path="tutorial" element={<ErrorPage message="This is currently unimplemented. Come back soon!" />} />
+                <Route path="scoreboard" element={<ErrorPage message="This is currently unimplemented. Come back soon!" />} />
 				<Route path="*" element={<ErrorPage />} />
             </Route>
         </Routes>

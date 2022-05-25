@@ -11,8 +11,10 @@
 namespace fs = boost::filesystem;
 
 #define INDEX "../client/build/index.html"
-#define CSSPATH "../client/build/static/css/"
-#define JSPATH "../client/build/static/js/"
+
+#define CSS "../client/build/static/css/main.26bfa704.css"
+#define JS "../client/build/static/js/main.92387cbe.js"
+
 
 Router::Router(){
     std::string CSS;
@@ -107,9 +109,26 @@ char* Router::respond(char* req){
         }
     }
 
-    if (r.isUpgrade() || (r.getType() != "GET" && r.getType() != "POST")){
-        std::cout << "websocket\n";
-        return nullptr;
+    else if (target.compare("/static/js/main.92387cbe.js")==0){
+/*        const char *jsfile = readFiletoBuffer(JS);
+        char js[strlen(jsfile)+128] = "HTTP/1.1 200 OK\r\n"
+            "Connection: close\r\n"
+            "Content-type: application/javascript; charset=utf-8\r\n"
+            "\r\n";*/
+           std::cout << "js\n";
+        return js;
+    }
+    else {
+/* 
+        const char *indexfile = readFiletoBuffer(INDEX);
+        char hello[strlen(indexfile)+128] = "HTTP/1.1 200 OK\r\n"
+            "Connection: close\r\n"
+            "Content-type: text/html\r\n"
+            "\r\n";
+*/ 
+           std::cout << "hello\n";
+        return hello;
+
     }
     std::cout << "homepage hello\n";
     return hello;

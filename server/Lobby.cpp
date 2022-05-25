@@ -137,10 +137,10 @@ json Lobby::verify_puzzle_solution(int socketnum, std::string user_solution){
     else{
         player_list[socketnum].incorrect_solutions += 1;
     }
-
+    bool is_correct = solution == user_solution;
     json response = {
         {"type", "verifyPuzzle"},
-        {"correct", solution == user_solution}
+        {"correct", is_correct}
     };
 
     return response;

@@ -33,26 +33,33 @@ function GamePlayModeButtons(prop) {
         setValue(event.target.value);
     };
 
+    const joinPrivateGame = (event) => {
+        console.log(event.target.value);
+        setValue(event.target.value);
+        if (event.key === "Enter") {
+		    navigate(`/join/${value}`);
+        }
+    };
+
 
     return (
         <Stack direction="row" 
-           sx={{ justifyContent: 'center', my: 2 }} > 
+           sx={{ justifyContent: 'center' }} > 
 
             <Button variant="contained" sx={{ m: 1 }}
-				onClick={() => {
-				navigate("/tutorial"); }} >
+				onClick={() => { navigate("/tutorial"); }} >
 				Tutorial
 			</Button>
 
             <Button variant="contained" sx={{ m: 1 }} 
-				onClick={() => {
-				navigate("/join"); }} >
+				onClick={() => { navigate("/join"); }} >
 				Join Game
 			</Button>
 
             <TextField id="outlined-basic" variant="outlined" size="small" sx={{ m: 1 }} 
                 value={value}
                 onChange={handleChange}
+                onKeyPress = {joinPrivateGame}
                 label="Private Party" />
         </Stack>
     );

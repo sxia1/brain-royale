@@ -22,33 +22,34 @@ import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import ShuffleOnIcon from '@mui/icons-material/ShuffleOn';
 
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+import ColorMatch from './ColorMatch';
+import ColorMatchContainer from '../containers/ColorMatchContainer';
 
 import { red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, grey, blueGrey } from '@mui/material/colors';
 
 
 function PuzzleCounter(props) {
-    const [countPuzzles, setCountPuzzles] = React.useState(0);
-    const [countSent, setCountSent] = React.useState(0);
     const [maxPuzzles, setMaxPuzzles] = React.useState(20);
 
     return (
         <Box sx={{ align: 'right' }} > 
-            <Typography component="span"> {countPuzzles} </Typography>
-            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ {countSent}) </Typography>
+            <Typography component="span"> {props.countPuzzles} </Typography>
+            <Typography component="span" sx={{ color: '#b71c1c' }}> (+ {props.countSent}) </Typography>
             <Typography component="span" > 🧩 / {maxPuzzles} </Typography>
         </Box>
     );
 }
 
 function PuzzleTimer(props) {
-    let countdown = `00:${props.count < 0 ? '00' : (props.max-props.count).toString().padStart(2, "0")}`
+    let countdown = `00:${props.count < 0 ? '00' : (props.count).toString().padStart(2, "0")}`
 
     return (
         <Box>
             <Typography variant="h3" gutterBottom component="div" 
                 sx={{ fontFamily: 'Monospace', textAlign: 'center', 
-                        color: (props.max - props.count > (props.max * .5) || props.count < 0 ? '#000000' : '#b71c1c') }}>
+                        color: (props.count > (props.max * .5) || props.count < 0 ? '#000000' : '#b71c1c') }}>
                 {countdown}
             </Typography>
         </Box>
@@ -63,59 +64,76 @@ function AttackStyle(props) {
     }
 
     return (
-        <Box>
+    <Box>
         <ToggleButtonGroup size="small" exclusive aria-label="attack style"
             orientation={props.orientation || 'horizontal'}
             color="error" value={attack}
             sx={{ height: 30, width: 'auto', fontSize: 8 }}
             onChange={handleChange} >
 
-            <ToggleButton value="loss" aria-label="loss" sx={{ fontSize: 12 }}>
-                <Tooltip title="send a puzzle to the worst performing player and destroy their dreams of being big brain">
-                    <span>Loss {attack === "loss" ? <KeyboardDoubleArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> : <KeyboardArrowDownIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
-                </Tooltip>
-            </ToggleButton>
-
-            <ToggleButton value="retaliation" aria-label="retaliation" sx={{ fontSize: 12 }}>
-                <Tooltip title="retaliate against a person who sent you a puzzle">
-                    <span>Retaliation {attack === "retaliation" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
-                </Tooltip>
-            </ToggleButton>
-
             <ToggleButton value="random" aria-label="random" sx={{ fontSize: 12 }}>
                 <Tooltip title="send some rando a puzzle">
-                    <span>Random {attack === "random" ? <ShuffleOnIcon fontSize="small" sx={{ ml: 1/2 }} /> : <ShuffleIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
+                    <span>Attack{attack === "random" ? <SportsKabaddiIcon fontSize="small" sx={{ ml: 1/2 }} /> : <SportsMmaIcon fontSize="small" sx={{ ml: 1/2 }} /> }</span>
                 </Tooltip>
             </ToggleButton>
         </ToggleButtonGroup>
-        </Box>
+    </Box>
     );
 
 }
 
-function Puzzle(props) {
-    const [count, setCount] = React.useState(0);
+class Puzzle extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
+        this.state = { count: 10, max: 10, info: "", puzzle_stack: 10, streak: 0};
+    }
+        
+    componentDidMount() {
+        if (this.props.websocket != null){
+            this.requestPuzzle();
+            this.getPuzzle();
+        }
+        this.intervalID = setInterval(() => {
+            this.state.count = this.state.count - 0.1;
+        }, 100);
+    }
 
-    let max = 10;
+    componentDidUpdate() {
+        clearInterval(this.intervalID);
 
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setCount((prevCount) => (prevCount >= max ? -1 : prevCount + 1));
-        }, 1000);
-        return () => {
-            clearInterval(timer);
+        this.state.count = 10;
+        this.intervalID = setInterval(() => {
+            this.state.count = this.state.count - 0.1;
+        }, 100);
+        //IF TIMER RAN OUT UPDATE COUNTER AND REQUEST NEW PUZZLE
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalID);
+    }
+
+    requestPuzzle = () => {
+        var request = {
+            "type": "generatePuzzle",
+            "lobby_id": 1
         };
-    }, []);
+        this.props.websocket.send(JSON.stringify(request));
+    }
 
-    let progressBarColor = blue[700]; 
-    if (count > max * .75) {
-        progressBarColor = red[900];
+    attackPlayer = () => {
+        var request = {
+            "type": "attack",
+            "lobby_id": 1
+        };
+        this.props.websocket.send(JSON.stringify(request));
     }
-    else if (count > max * .5) {
-        progressBarColor = red[500];
-    }
-    else if (count > max * .25) {
-        progressBarColor = deepPurple[500];
+
+    getPuzzle = () => {
+        this.props.websocket.onmessage = (e) => {
+            var msg = JSON.parse(e.data);
+            this.state.info = msg;
+        }
     }
 
 
@@ -132,12 +150,18 @@ function Puzzle(props) {
                     color='inherit'
                     value={count * (100/max) } />
             </Box>
+            <Box container sx={{ width:600, justifyContent:'space-between', alignItems: 'center', p: 2, mt: 2, mb: 10 }}>
+                <ColorMatch info={info}/>
+            </Box>
 
+            </Box>
+        );
+    }
+};
+
+/*
             <Skeleton variant="rectangular" animation="wave" 
                 sx={{ bgcolor: '#cfd8dc' }} 
                 height={450} width={600} />
-        </Box>
-    );
-}
-
+ */
 export default Puzzle; 
